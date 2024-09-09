@@ -8,10 +8,13 @@ from torch_dataset import TorchDataset
 This class is a wrapper around a pandas DataFrame that provides a set of functions to manipulate the dataset.
 
 '''
+
+
 class ODEDataset:
 
-    def __init__(self):
-        self._df: pd.DataFrame | None = None
+    def __init__(self, name: str, df: pd.DataFrame | None = None):
+        self._df: pd.DataFrame | None = df
+        self.name = name
 
     # importers
     '''
@@ -29,6 +32,10 @@ class ODEDataset:
         self._df = pd.read_csv(path, low_memory=low_memory, **kwargs)
         return self
 
+    def from_excel(self, path: str, sheet_name: str = 0, **kwargs):
+        self._df = pd.read_excel(path, sheet_name=sheet_name, **kwargs)
+        return self
+
     # Modifiers
     '''
     This function applies a modifier function to the dataset.
@@ -42,11 +49,43 @@ class ODEDataset:
         if self._df is None:
             raise ValueError("Dataset has not been initialized")
 
-        self._df = modifier(self._df)
-        return self
+        new_df = modifier(self._df)
+        if new_df is None:
+            raise ValueError("Modifier function should return a DataFrame")
+        return ODEDataset(self.name, new_df)
 
     # Mergers
     #  Add another Dataset
+
+    def concat(self, other: 'ODEDataset'):
+        if self._df is None or other._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        cols = set(self.get_columns())
+        other_cols = set(other.get_columns())
+
+        if len(cols.difference(other_cols)) > 0:
+            raise ValueError(f"Columns do not match: {cols} != {other_cols}")
+
+        other_df = other.to_dataframe()
+        self._df = pd.concat([self._df, other_df])
+        return self
+
+    def merge(self, other: 'ODEDataset', on: [str], how: str = 'inner'):
+        if self._df is None or other._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        cols = set(self.get_columns())
+        other_cols = set(other.get_columns())
+
+        if len(cols.difference(other_cols)) > 0:
+            raise ValueError(f"Columns do not match: {cols} != {other_cols}")
+
+        self._df = self._df.merge(other.to_dataframe(), on=on, how=how)
+        return self
+
+
+
 
     # Exporters
     #     to csv
