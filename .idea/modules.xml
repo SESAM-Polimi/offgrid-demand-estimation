@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/offgrid-demand-estimation.iml" filepath="$PROJECT_DIR$/.idea/offgrid-demand-estimation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../test_db/.idea/test_db.iml" filepath="$PROJECT_DIR$/../test_db/.idea/test_db.iml" />
     </modules>
   </component>
 </project>

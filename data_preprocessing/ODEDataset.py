@@ -54,6 +54,34 @@ class ODEDataset:
             raise ValueError("Modifier function should return a DataFrame")
         return ODEDataset(self.name, new_df)
 
+    def apply_each(self, modifier: Callable[[pd.Series], pd.Series]):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        self._df = self._df.apply(modifier, axis=1)
+        return self
+
+    def new_feature(self, feature_name: str, feature_function: Callable[[pd.Series], pd.Series]):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        self._df[feature_name] = self._df.apply(feature_function, axis=1)
+        return self
+
+    def select(self, columns: [str]):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        self._df = self._df[columns]
+        return self
+
+    def group_by(self, by: str):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        self._df = self._df.groupby(by).agg(lambda x: list(x)).reset_index()
+        return ODEDataset(self.name, self._df)
+
     # Mergers
     #  Add another Dataset
 
@@ -74,18 +102,15 @@ class ODEDataset:
     def merge(self, other: 'ODEDataset', on: [str], how: str = 'inner'):
         if self._df is None or other._df is None:
             raise ValueError("Dataset has not been initialized")
-
-        cols = set(self.get_columns())
-        other_cols = set(other.get_columns())
-
-        if len(cols.difference(other_cols)) > 0:
-            raise ValueError(f"Columns do not match: {cols} != {other_cols}")
+        #
+        # cols = set(self.get_columns())
+        # other_cols = set(other.get_columns())
+        #
+        # if len(cols.difference(other_cols)) > 0:
+        #     raise ValueError(f"Columns do not match: {cols} != {other_cols}")
 
         self._df = self._df.merge(other.to_dataframe(), on=on, how=how)
         return self
-
-
-
 
     # Exporters
     #     to csv

@@ -43,7 +43,14 @@ def combine_drivers(result: str, func: Callable[[pd.Series], Any]) -> callable:
 
     return inner_modifier
 
+def multi_unify_presence(drivers: [str]) -> Callable:
+    def inner_unify_presence(row: pd.Series) -> int:
+        for driver in drivers:
+            if row[driver] == 1:
+                return 1
+        return 0
 
+    return inner_unify_presence
 def unify_presence(driver1: str, driver2: str) -> Callable:
     def inner_unify_presence(row: pd.Series) -> int:
         x = row[driver1]

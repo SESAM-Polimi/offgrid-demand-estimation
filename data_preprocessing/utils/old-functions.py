@@ -82,8 +82,9 @@ def fuel_usage(data,source,questionnaire,section,hh,question,clusters):
         fuel_usage[j] = sum(fuel_usage[j])
         
     return fuel_usage
-                       
-                           
+
+
+    # is_clean_fuel(data,source,questionnaire,'MTF_HH_Cooking_Data_Final','Derived_variables',hh,'i_18_a_1st_fuel')
 def is_clean_fuel(data,source,questionnaire,section_1,section_2,hh,ref_question):
     
     max_usage = max(data[source][questionnaire][section_2][hh]['Fuel_usage']['Answer'])
@@ -131,7 +132,8 @@ def HH_people(data,source,questionnaire,section,hh,ref_question,function_mode,cl
             temp += data[source][questionnaire][section][hh][question]['Answer'][0]
         HH_people = temp
     return HH_people
-             
+
+# re_categorization(data,source,questionnaire,'Derived_variables',hh,'Connection_type','-','-',map_cat,'System_management',clusters)
 def re_categorization(data,source,questionnaire,section,hh,ref_question,HHH_relation_question,HHH_relation_answer,map_cat,derived_variables_cat,clusters):
     'ref_question is the question to be re-categorized.'
     'HHH_relation_question is the name of the question which specifies the relation with the household head.'
@@ -472,6 +474,7 @@ def filtering_derived(data,source,questionnaire,section,hh,ref_question,wrong_an
     
     return filtering
 
+# dwelling_ownership(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'b_b_7','b_b_8','Yes','No','Rented','Free')
 def dwelling_ownership(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_yes,ref_no,ref_rented,ref_free):
     dwelling_ownership = np.nan
     if data[source][questionnaire][section][hh][ref_question_1]['Answer'][0] == ref_yes:
@@ -483,6 +486,7 @@ def dwelling_ownership(data,source,questionnaire,section,hh,ref_question_1,ref_q
         
     return dwelling_ownership
 
+# dwelling_toilet(data,source,questionnaire,'Derived_variables',hh,'Dwelling_toilet_1','Dwelling_toilet_2','Dwelling_toilet_3','Dwelling_toilet_3','not_list')
 def dwelling_toilet(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_question_3,ref_question_4,function_mode):
     'Function_mode depends if the answer is coming from a list or not'
     if function_mode == 'not_list':
@@ -497,6 +501,7 @@ def dwelling_toilet(data,source,questionnaire,section,hh,ref_question_1,ref_ques
             dwelling_toilet= 0
     return dwelling_toilet
 
+# dwelling_quality_index(data,source,questionnaire,'Derived_variables',hh,clusters)
 def dwelling_quality_index(data,source,questionnaire,section,hh,clusters):
     dwelling_quality_index= 0
     temp = []
@@ -508,7 +513,7 @@ def dwelling_quality_index(data,source,questionnaire,section,hh,clusters):
     else:
         dwelling_quality_index = np.nan
     return dwelling_quality_index
-
+# access_credit(data,source,questionnaire,'MTF_HH_Core_Survey',hh,clusters,'string')
 def access_credit(data,source,questionnaire,section,hh,clusters,type_of_answer):
     
     access_credit = np.nan
@@ -544,6 +549,7 @@ def access_credit(data,source,questionnaire,section,hh,clusters,type_of_answer):
         access_credit = 'No'
     return access_credit
 
+# price_alternative(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'f_f_candle_10','f_f_candle_11','f_f_3_Candle_1','Yes','candles','single_response')
 def price_alternative(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_question_3,ref_answer,function_mode,function_mode_2):
     price_alternative= np.nan
     if function_mode_2 == 'single_response':
@@ -578,6 +584,7 @@ def price_alternative(data,source,questionnaire,section,hh,ref_question_1,ref_qu
                      price_alternative = Expenditure/Quantity
     return price_alternative
 
+# expenditure(data,source,questionnaire,'MTF_HH_Core_Survey','-','-',hh,clusters,1,1,1,'single_response')
 def expenditure(data,source,questionnaire,section_1,section_2,section_3,hh,clusters,weekly,monthly,yearly,function_mode):
     expenditure = 0
     if function_mode == 'single_response':
@@ -718,6 +725,7 @@ def asset(data,source,questionnaire,section_1,section_2,hh,ref_question,function
             asset = 'Yes'
     return asset
 
+# connection_type(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'c_c_2','c_c_38','c_c_q122_3','Yes','Yes',1)
 def connection_type(data,source,questionnaire,section_1,hh,ref_question_1,ref_question_2,ref_question_3,ref_answer_grid,ref_answer_minigrid,ref_answer_SHS):
     connection_type = np.nan
     if section_1 == 'Derived_variables':
@@ -736,6 +744,7 @@ def connection_type(data,source,questionnaire,section_1,hh,ref_question_1,ref_qu
             connection_type = 'Solar Home System'
     return connection_type
 
+# measurement_age(data,source,questionnaire,'MTF_HH_Core_Survey','Derived_variables',hh,'c_c_7','c_c_38','MTF_HH_Solar_Roster','c_135_yrs','c_127_device')
 def measurement_age(data,source,questionnaire,section_1,section_2,hh,ref_question_1,ref_question_2,section_solar,ref_question_solar_1,ref_question_solar_2):
     measurement_age = np.nan
     try:
@@ -755,8 +764,10 @@ def measurement_age(data,source,questionnaire,section_1,section_2,hh,ref_questio
     except:
         return measurement_age
 
+# hours_available_electricity(data,source,questionnaire,'MTF_HH_Core_Survey','Derived_variables',hh,'c_c_25aii','c_c_25aii','c_c_147b_Typicalmonth','MTF_HH_Solar_Roster','c_127_device','Solar home system (Solar PV system)')
 def hours_available_electricity(data,source,questionnaire,section_1,section_2,hh,ref_question_1,ref_question_2,ref_question_3,section_solar_devices,main_device_question,valid_answer):
     hours_available_electricity = np.nan
+
     try:
         if data[source][questionnaire][section_2][hh]['Connection_type']['Answer'] == 'National grid':
             hours_available_electricity = float(data[source][questionnaire][section_1][hh][ref_question_1]['Answer'][0])
@@ -776,25 +787,7 @@ def main_shs_device(data,source,questionnaire,hh,section_solar_devices,main_devi
     main_shs_dev = data[source][questionnaire][section_solar_devices][hh][main_device_question]['Answer'][0]
     return main_shs_dev
 
-def connection_fee(data,source,questionnaire,section,section_1,hh,cond_question_grid,ref_question_1,ref_question_2,section_solar,ref_question_solar_1,ref_question_solar_2,ref_question_solar_3):
-    connection_fee = np.nan
-    try:
-        if data[source][questionnaire][section][hh]['Connection_type']['Answer'] == 'National grid':
-            if data[source][questionnaire][section_1][hh][cond_question_grid]['Answer'][0] != 'Household was already connected' and data[source][questionnaire][section_1][hh][ref_question_1]['Answer'][0] != 'Household was already connected':
-                connection_fee = float(data[source][questionnaire][section_1][hh][ref_question_1]['Answer'][0])
-        elif data[source][questionnaire][section][hh]['Connection_type']['Answer'] == 'Local mini-grid':
-            connection_fee = float(data[source][questionnaire][section_1][hh][ref_question_2]['Answer'][0])
-        elif data[source][questionnaire][section][hh]['Connection_type']['Answer'] == 'Solar Home System':
-            temp = []
-            for i in range(len(data[source][questionnaire][section_solar][ref_question_solar_3]['Answer'])):
-                if data[source][questionnaire][section_solar][ref_question_solar_2]['Answer'][i] == 3 or (data[source][questionnaire][section_solar][ref_question_solar_1]['Answer'][i] == 'Solar home system (Solar PV system)' and data[source][questionnaire][section_solar][hh][ref_question_solar_2]['Answer'][i] == 'Bought, fully paid'):
-                    temp.append(data[source][questionnaire][section_solar][hh][ref_question_solar_3]['Answer'][i])
-            if len(temp) > 0:
-                connection_fee= sum(temp) 
-        return connection_fee
-    except:
-        return connection_fee
-
+# electricity_expenditure(data,source,questionnaire,'Derived_variables','MTF_HH_Core_Survey',hh,'c_c_20','c_c_20','monthly')
 def electricity_expenditure(data,source,questionnaire,section_1,section_2,hh,ref_question_1,ref_question_2,function_mode):
     electricity_expenditure = np.nan
     if function_mode == 'monthly':
@@ -815,7 +808,7 @@ def electricity_expenditure(data,source,questionnaire,section_1,section_2,hh,ref
             elif data[source][questionnaire][section_1][hh][ref_question_1]['Answer'][0] == 'M3':
                 electricity_expenditure =  data[source][questionnaire][section_1][hh][ref_question_2]['Answer'][0]/3
     return electricity_expenditure
-
+# land_owned(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'n_n_1b','n_n_1b_unit','Acre','sq metres','-','-','-')
 def land_owned(data,source,questionnaire,section,hh,question_dimension,question_unit,ref_answer_unit_acre,ref_answer_unit_sqm,ref_answer_unit_hectare,ref_answer_unit_plot,ref_answer_unit_ridg):
     land_owned = np.nan
     if data[source][questionnaire][section][hh][question_unit]['Answer'][0] == ref_answer_unit_acre:
@@ -846,6 +839,7 @@ def land_multiple_owned(data,source,questionnaire,section_1,section_2,hh,ref_que
             land_multiple_owned = np.nan
     return land_multiple_owned
 
+# electricity_consumption(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'c_c_21',888,111,'National grid')
 def electricity_consumption(data,source,questionnaire,section,hh,ref_question,wrong_answer_1,wrong_answer_2,function_mode):
     electricity_consumption = np.nan
     if data[source][questionnaire]['Derived_variables'][hh]['Connection_type']['Answer'] == function_mode:
@@ -857,7 +851,7 @@ def electricity_tariff(data,source,questionnaire,section,hh,ref_question_1,ref_q
     if data[source][questionnaire][section][hh][ref_question_2]['Answer'] != 0:
         electricity_tariff = data[source][questionnaire][section][hh][ref_question_1]['Answer']/data[source][questionnaire][section][hh][ref_question_2]['Answer']
     return electricity_tariff
-
+# tariff_type(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'c_c_12','No one','c_c_17',map_cat,clusters)
 def tariff_type(data,source,questionnaire,section,hh,ref_question,ref_answer,ref_question_1,map_cat,clusters):
     tariff_type = np.nan
     tariff_type_list = []
@@ -866,7 +860,7 @@ def tariff_type(data,source,questionnaire,section,hh,ref_question,ref_answer,ref
         return tariff_type
     tariff_type_list = re_categorization(data,source,questionnaire,section,hh,ref_question_1,'','',map_cat,'Tariff_type',clusters)
     tariff_type = tariff_type_list[0]
-    
+
     return tariff_type
 
 def pre_paid_tariff(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_answer_1,ref_answer_2):
@@ -877,7 +871,7 @@ def pre_paid_tariff(data,source,questionnaire,section,hh,ref_question_1,ref_ques
                   pre_paid_tariff = 'Yes'
             elif data[source][questionnaire][section][hh][ref_question_2]['Answer'][0] == ref_answer_2:
                 pre_paid_tariff = 'No'
-    
+
     return pre_paid_tariff
 
 def presence_appliances(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_appliance,function_mode):
@@ -1018,6 +1012,7 @@ def user_unification(data,source,questionnaire,section,hh,ref_question_1,ref_que
         except: temp +=1
     return user_unification
 
+# years_of_HHH_in_community(data,source,questionnaire,'MTF_HH_Core_Survey','MTF_HH_Roster',hh,'a_4_rel_hhh','b_b_4','b_b_1','Head','multi_section')
 def years_of_HHH_in_community(data,source,questionnaire,section_1,section_2,hh,HHH_relation_question,ref_question_1,ref_question_2,HHH_relation_answer,function_mode):
     years_of_HHH_in_community = np.nan
     

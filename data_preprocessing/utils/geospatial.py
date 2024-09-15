@@ -9,10 +9,12 @@ import requests
 import pandas as pd
 from functions import isNaN
 
+# GADM(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'cty','dist','div','subloc')
 def GADM(data,source,questionnaire,section,hh,ref_question_lev_1,ref_question_lev_2,ref_question_lev_2_1,ref_question_lev_3):
     GADM = [np.nan, np.nan, np.nan, np.nan]
-    if isNaN(data[source][questionnaire][section][hh][ref_question_lev_1]['Answer'][0]) == False:
-        temp_1 = data[source][questionnaire][section][hh][ref_question_lev_1]['Answer'][0].lower()
+    row_response = data[source][questionnaire][section][hh]
+    if isNaN(row_response[ref_question_lev_1]['Answer'][0]) == False:
+        temp_1 = row_response[ref_question_lev_1]['Answer'][0].lower()
         temp_1 = temp_1.replace('-',' ')
         temp_1 = temp_1.replace("'","")
         for i in list(data[source][questionnaire]['GADM_level_1'].keys()):
@@ -27,15 +29,15 @@ def GADM(data,source,questionnaire,section,hh,ref_question_lev_1,ref_question_le
             temp_3 = np.nan
             temp_2 = np.nan
             temp_4 = np.nan
-            if isNaN(data[source][questionnaire][section][hh][ref_question_lev_2]['Answer'][0]) == False:   
-                temp_2 = data[source][questionnaire][section][hh][ref_question_lev_2]['Answer'][0].lower()
+            if isNaN(row_response[ref_question_lev_2]['Answer'][0]) == False:
+                temp_2 = row_response[ref_question_lev_2]['Answer'][0].lower()
                 temp_2 = temp_2.replace('-',' ')
                 temp_2 = temp_2.replace("'","")
-            if ref_question_lev_2_1 != '' and isNaN(data[source][questionnaire][section][hh][ref_question_lev_2_1]['Answer'][0]) == False:
-                temp_3 = data[source][questionnaire][section][hh][ref_question_lev_1]['Answer'][0].lower() + ' ' + data[source][questionnaire][section][hh][ref_question_lev_2_1]['Answer'][0].lower()
+            if ref_question_lev_2_1 != '' and isNaN(row_response[ref_question_lev_2_1]['Answer'][0]) == False:
+                temp_3 = row_response[ref_question_lev_1]['Answer'][0].lower() + ' ' + row_response[ref_question_lev_2_1]['Answer'][0].lower()
                 temp_3 = temp_3.replace('-',' ')
                 temp_3 = temp_3.replace("'","")
-                temp_4 = data[source][questionnaire][section][hh][ref_question_lev_2_1]['Answer'][0].lower()
+                temp_4 = row_response[ref_question_lev_2_1]['Answer'][0].lower()
                 temp_4 = temp_4.replace('-',' ')
                 temp_4 = temp_4.replace("'","")
             if isNaN(temp_2) == False or isNaN(temp_3) == False or isNaN(temp_4) == False:
@@ -50,7 +52,7 @@ def GADM(data,source,questionnaire,section,hh,ref_question_lev_1,ref_question_le
                         GADM[0] = data[source][questionnaire]['GADM_level_2'][i]['GID_2']['Answer'][0]
                         GADM[2] = data[source][questionnaire]['GADM_level_2'][i]['NAME_2']['Answer'][0]
                         return GADM
-            if ref_question_lev_2_1 != '' and isNaN(data[source][questionnaire][section][hh][ref_question_lev_2_1]['Answer'][0]) == False and questionnaire == 'kenya':
+            if ref_question_lev_2_1 != '' and isNaN(row_response[ref_question_lev_2_1]['Answer'][0]) == False and questionnaire == 'kenya':
                 for i in list(data[source][questionnaire]['GADM_level_3'].keys()):
                     temp_GADM_3 = str(data[source][questionnaire]['GADM_level_3'][i]['NAME_3']['Answer'][0]).lower()
                     temp_GADM_3 = temp_GADM_3.replace('-',' ')
@@ -62,8 +64,8 @@ def GADM(data,source,questionnaire,section,hh,ref_question_lev_1,ref_question_le
                         GADM[0] = data[source][questionnaire]['GADM_level_3'][i]['GID_2']['Answer'][0]
                         GADM[2] = data[source][questionnaire]['GADM_level_3'][i]['NAME_2']['Answer'][0]
                         return GADM
-            if ref_question_lev_3 != '' and isNaN(data[source][questionnaire][section][hh][ref_question_lev_3]['Answer'][0]) == False and questionnaire == 'kenya':
-                temp_5 = data[source][questionnaire][section][hh][ref_question_lev_3]['Answer'][0].lower()
+            if ref_question_lev_3 != '' and isNaN(row_response[ref_question_lev_3]['Answer'][0]) == False and questionnaire == 'kenya':
+                temp_5 = row_response[ref_question_lev_3]['Answer'][0].lower()
                 temp_5 = temp_5.replace('-',' ')
                 temp_5 = temp_5.replace("'","")
                 for i in list(data[source][questionnaire]['GADM_level_3'].keys()):
@@ -87,10 +89,11 @@ def GIS_info(data,source,questionnaire,section,hh,variable,ref_question,function
     "This is the section dedicated on Geospatial information"
     "1) Climate - climate zones are assigned based on the main climate present in the areas considered upon the highest level of GADM"
     GIS_info = np.nan
+    row_response = data[source][questionnaire][section][hh]
     ref_question_GADM = np.nan
     if function_mode == 'GADM_level':
         if variable in GADM_variables:
-                if isNaN(data[source][questionnaire][section][hh][ref_question]['Answer']) == False:
+                if isNaN(row_response[ref_question]['Answer']) == False:
                     if ref_question == 'GADM_level_1':
                         ref_question_GADM = 'NAME_1'
                     elif ref_question == 'GADM_level_2':
