@@ -168,8 +168,8 @@ def re_categorization(data,source,questionnaire,section,hh,ref_question,HHH_rela
                     if data[source][questionnaire][section][hh][ref_question]['Answer'][j] == map_cat[derived_variables_cat]['Original_cat'][i]:
                         re_categorization[j] = map_cat[derived_variables_cat]['Final_cat'][i]              
         return re_categorization
-             
 
+# age_HHH(data,source,questionnaire,'MTF_HH_Roster',hh,'a_5_age','a_4_rel_hhh','Head')
 def age_HHH(data,source,questionnaire,section,hh,ref_question_1,HHH_relation_question,HHH_relation_answer):
     'ref_question is the question about age of family member.'
     'HHH_relation_question is the name of the question which specifies the relation with the household head.'
@@ -233,6 +233,7 @@ def age_groups_extraction(data,source,questionnaire,section_1,section_2,hh,ref_q
         age_groups_extraction = [np.nan, np.nan]
     return age_groups_extraction
 
+# HH_working_people(data,source,questionnaire,'Derived_variables',hh,'Main_occupation')
 def HH_working_people(data,source,questionnaire,section,hh,ref_question):
      'ref_question is the re-categorized main occupation.'
      

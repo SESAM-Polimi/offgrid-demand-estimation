@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from typing import Callable
 import tensorflow as tf
-from torch_dataset import TorchDataset
+from .torch_dataset import TorchDataset
 
 '''
 This class is a wrapper around a pandas DataFrame that provides a set of functions to manipulate the dataset.

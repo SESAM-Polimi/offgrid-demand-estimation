@@ -7,4 +7,11 @@
     <orderEntry type="module" module-name="test_db" />
     <orderEntry type="module" module-name="test_db" />
   </component>
+  <component name="PyNamespacePackagesService">
+    <option name="namespacePackageFolders">
+      <list>
+        <option value="$MODULE_DIR$/datasets" />
+      </list>
+    </option>
+  </component>
 </module>
