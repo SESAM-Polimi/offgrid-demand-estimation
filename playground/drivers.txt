@@ -17,9 +17,13 @@ Dwelling_quality_index
 Hours_available_electricity
 Measurement_age
 Monthly_expenditure
+
+
 Ownership_large_livestock
 Ownership_motorized_vehicle
 Ownership_small_livestock
+
+
 Tariff_payment_frequency_Every 2weeks
 Tariff_payment_frequency_Every 6months
 Tariff_payment_frequency_Monthly

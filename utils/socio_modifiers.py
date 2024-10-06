@@ -57,113 +57,6 @@ def extract_head_w_home_business(ref_question_1, ref_question_2, ref_question_3,
     return inner
 
 
-def categorize(feature: str, categories: dict):
-    def inner(row):
-        value = row[feature]
-        if value is None or value is np.nan:
-            return np.nan
-
-        if type(value) is list:
-            result = []
-            for v in value:
-                if is_nan(v):
-                    result.append(np.nan)
-                else:
-                    result.append(categories[v])
-
-            return result
-        else:
-            return categories[value]
-
-    return inner
-
-
-def extract_and_rename(cols: dict) -> callable:
-    def inner_extractor(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        # print(cols, df.columns, cols.keys())
-
-        df = df[cols.keys()]
-        df.head()
-        df.rename(columns=cols, inplace=True)
-        return df
-
-    return inner_extractor
-
-
-def add_const_driver(name: str, value) -> callable:
-    def inner_modifier(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        df[name] = value
-        return df
-
-    return inner_modifier
-
-
-def add_const_driver_many(drivers: dict) -> callable:
-    def inner_modifier(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        for name, value in drivers.items():
-            df[name] = value
-
-        return df
-
-    return inner_modifier
-
-
-def combine_drivers(result: str, func: Callable[[pd.Series], Any]) -> callable:
-    def inner_modifier(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        df[result] = df.apply(func, axis=1)
-        return df
-
-    return inner_modifier
-
-
-def multi_unify_presence(drivers: [str]) -> Callable:
-    def inner_unify_presence(row: pd.Series) -> int:
-        for driver in drivers:
-            if row[driver] == 1:
-                return 1
-        return 0
-
-    return inner_unify_presence
-
-
-def unify_presence(driver1: str, driver2: str) -> Callable:
-    def inner_unify_presence(row: pd.Series) -> int:
-        x = row[driver1]
-        y = row[driver2]
-        if x == 1 or y == 1:
-            return 1
-        else:
-            return 0
-
-    return inner_unify_presence
-
-
-def sum_presence(driver1: str, driver2: str) -> Callable:
-    def inner_sum_presence(row: pd.Series) -> int:
-        x = row[driver1]
-        y = row[driver2]
-        return x + y
-
-    return inner_sum_presence
-
-
-def remove_drivers(drivers: [str]) -> callable:
-    def inner_modifier(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        return df.drop(columns=drivers)
-
-    return inner_modifier
-
-
-'''
-:param ref_question re categorized main occupation
-'''
-
-
 def extract_working_people(ref_question):
     def inner_extractor(row: pd.Series) -> float | int:
         if any(is_nan(t) for t in row[ref_question]):
@@ -177,16 +70,22 @@ def extract_working_people(ref_question):
     return inner_extractor
 
 
-'''
-:parameter 'ref_question is the re-categorized main occupation.'
-:parameter 'HHH_relation_question is the name of the question which specifies the relation with the household head.'
-:parameter 'HHH_relation_answer is the name of the answer which identifies the household head in HHH_relation_question.'
-'''
-
-
 # socio_status_HHH(data,source,questionnaire,'MTF_HH_Roster','Derived_variables',hh,'Main_occupation','a_4_rel_hhh','Head')
 def extract_socio_status_hhh(questionnaire, ref_question, hhh_relation_question,
                              hhh_relation_answer):
+    '''
+    Extracts the socio-economic status of the household head.
+
+    Parameters:
+    questionnaire (str): The name of the questionnaire.
+    ref_question (str): The reference question for the main occupation.
+    hhh_relation_question (str): The reference question for the household head relation.
+    hhh_relation_answer (str): The answer for the household head relation.
+
+    Returns:
+    Callable[[pd.Series], Any]: The socio-economic status of the household head.
+    '''
+
     def inner(row: pd.Series):
         result = np.nan
         assert_many_columns_exists_in_row(row, [ref_question, hhh_relation_question])
@@ -238,33 +137,52 @@ def extract_age_groups(ref_question, function_mode):
     return inner
 
 
-# is_clean_fuel(data,source,questionnaire,'MTF_HH_Cooking_Data_Final','Derived_variables',hh,'i_18_a_1st_fuel')
-def is_clean_fuel(clean_fuels, ref_question):
+def measurement_age(ref_question_1, ref_question_2, ref_question_solar_1, ref_question_solar_2):
+    """
+      Extracts the age of the connection based on the type of connection.
+
+      Parameters:
+      ref_question_1 (str): The reference question for the national grid connection.
+      ref_question_2 (str): The reference question for the local mini grid connection.
+      ref_question_solar_1 (str): The reference question for the solar home system.
+      ref_question_solar_2 (str): The reference question for the type of solar home system.
+
+      Returns:
+      Callable([pd.Series], float]: The age of the connection if available, otherwise NaN.
+      """
+
     def inner(row: pd.Series):
-        assert_many_columns_exists_in_row(row, [ref_question, 'Fuel_usage'])
+        result = np.nan
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2, 'Connection_type', ref_question_solar_1,
+                                                ref_question_solar_2])
+        try:
+            connection_type = row['Connection_type']
+            if is_nan(connection_type):
+                return result
+            if connection_type == NATIONAL_GRID:
+                if row[ref_question_1][0] != ALWAYS_HAD_GRID and row[ref_question_1][0] != "Don't know":
+                    result = float(row[ref_question_1][0])
 
-        max_usage = max(row['Fuel_usage'])
-        pos_max = row['Fuel_usage'].index(max_usage)
-        if row[ref_question][pos_max] in clean_fuels:
-            return 'Yes'
-        else:
-            return 'No'
-
-    return inner
-
-
-# fuel_usage(data,source,questionnaire,'MTF_HH_Cooking_Data_Final',hh,question,clusters)
-
-def extract_fuel_usage(cooking_hrs_cluster):
-    def inner(row: pd.Series):
-        assert_many_columns_exists_in_row(row, cooking_hrs_cluster)
-        result = []
-        for j in range(len(row[cooking_hrs_cluster[0]])):
-            result += [[]]
-            for i in cooking_hrs_cluster:
-                result[j] += [row[i][j]]
-            result[j] = sum(result[j])
-
-        return result
+            if connection_type == LOCAL_MINI_GRID:
+                result = float(row[ref_question_2][0])
+            if connection_type == SOLAR_HOME_SYSTEM:
+                temp = []
+                if type(row[ref_question_solar_2]) == list:
+                    for i in range(len(row[ref_question_solar_1])):
+                        if row[ref_question_solar_2][i] == 3 or \
+                                row[ref_question_solar_2][
+                                    i] == SOLAR_HOME_SYSTEM_SOLAR_PV:
+                            temp.append(row[ref_question_solar_1][i])
+                    if len(temp) > 0:
+                        result = max(temp)
+                else:
+                    if row[ref_question_solar_2] == 3 or \
+                            row[ref_question_solar_2] == SOLAR_HOME_SYSTEM_SOLAR_PV:
+                        result = row[ref_question_solar_1]
+            return result
+        except Exception as e:
+            print(e)
+            raise AssertionError("Error in the data")
+            return result
 
     return inner
