@@ -33,9 +33,17 @@ def extract_and_rename(cols: dict) -> callable:
         # print(cols, df.columns, cols.keys())
 
         df = df[cols.keys()]
-        df.head()
-        df.rename(columns=cols, inplace=True)
+
+        df.rename(columns=cols, inplace=True, )
         return df
+
+    return inner_extractor
+
+
+def rename(cols: dict) -> callable:
+    def inner_extractor(src: pd.DataFrame) -> pd.DataFrame:
+        src.rename(columns=cols, inplace=True)
+        return src
 
     return inner_extractor
 
@@ -119,6 +127,7 @@ def find_any(question, answer, found, not_found):
     Returns:
         inner: the result of the check
     """
+
     def inner(row: pd.Series):
         if any(t == answer for t in row[question]):
             result = found
