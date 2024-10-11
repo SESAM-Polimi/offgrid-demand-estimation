@@ -3,7 +3,7 @@ HH_with_home_business
 Education_level_HHH
 Number_adults
 Socio_status_HHH_Contributingfamilyworker
-Number_of_rooms(Not found)
+Number_of_rooms
 
 Clean_fuel
 

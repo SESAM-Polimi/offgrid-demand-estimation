@@ -50,9 +50,8 @@ def rename(cols: dict) -> callable:
 
 def add_const_driver(name: str, value) -> callable:
     def inner_modifier(src: pd.DataFrame) -> pd.DataFrame:
-        df = src.copy()
-        df[name] = value
-        return df
+        src[name] = value
+        return src
 
     return inner_modifier
 

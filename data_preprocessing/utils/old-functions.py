@@ -875,6 +875,7 @@ def pre_paid_tariff(data,source,questionnaire,section,hh,ref_question_1,ref_ques
 
     return pre_paid_tariff
 
+# presence_appliances(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'m_m_3_group','888','17','string')
 def presence_appliances(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_appliance,function_mode):
     'function_mode can take values of "string" when it is present a string with the codes of the appliances present...'
     ' "long"" when two columns must be acquired, one with the item-id and one with a boolean variable indicating presence...'

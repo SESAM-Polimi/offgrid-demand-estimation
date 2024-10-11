@@ -84,7 +84,7 @@ def GADM(data,source,questionnaire,section,hh,ref_question_lev_1,ref_question_le
 Village_variables = ['Climate1','City_dist','Grid_dist','Latitude','Longitude','masl','Population']
 GADM_variables = ['Climate_majority','Population_mean','Relative_wealth_index','masl_mean']
 
-# GIS_info(data,source,questionnaire,'Derived_variables',hh,'Latitude','','Village_level')
+# GIS_info(data,source,questionnaire,'Derived_variables',hh,'Population_mean','GADM_level_2','GADM_level')
 def GIS_info(data,source,questionnaire,section,hh,variable,ref_question,function_mode):
     "This is the section dedicated on Geospatial information"
     "1) Climate - climate zones are assigned based on the main climate present in the areas considered upon the highest level of GADM"

@@ -9,3 +9,7 @@ LOCAL_MINI_GRID = 'Local mini-grid'
 SOLAR_HOME_SYSTEM = 'Solar Home System'
 SOLAR_HOME_SYSTEM_SOLAR_PV = 'Solar home system (Solar PV system)'
 ALWAYS_HAD_GRID = 'HH has always had grid connection'
+
+
+Village_variables = ['Climate1', 'City_dist', 'Grid_dist', 'Latitude', 'Longitude', 'masl', 'Population']
+GADM_variables = ['Climate_majority', 'Population_mean', 'Relative_wealth_index', 'masl_mean']
