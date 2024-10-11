@@ -35,18 +35,19 @@ def get_gadm(
     """
 
     def inner(row: pd.Series):
-        assert_many_columns_exists_in_row(row, [ref_question_lev_1, ref_question_lev_2, ref_question_lev_2_1,
-                                                ref_question_lev_3])
+        assert_many_columns_exists_in_row(row, [ref_question_lev_1,
+                                                ref_question_lev_2,
+                                                ref_question_lev_2_1,
+                                                ref_question_lev_3, ])
 
         result = [np.nan, np.nan, np.nan, np.nan]
         if not is_nan(row[ref_question_lev_1][0]):
             temp_1 = calculate_gadm_name(row[ref_question_lev_1][0])
-            for i, row in gadm_level_1_df.iterrows():
-                print(row["NAME_1"])
-                temp_gadm_1 = calculate_gadm_name(row['NAME_1'])
+            for i, gdm_row in gadm_level_1_df.iterrows():
+                temp_gadm_1 = calculate_gadm_name(gdm_row['NAME_1'])
                 if temp_1 == temp_gadm_1:
-                    result[0] = row['GID_1']
-                    result[1] = row['NAME_1']
+                    result[0] = gdm_row['GID_1']
+                    result[1] = gdm_row['NAME_1']
             if not is_nan(result[1]):
                 temp_3 = np.nan
                 temp_2 = np.nan
@@ -58,44 +59,46 @@ def get_gadm(
                         row[ref_question_lev_1][0].lower() + ' ' + row[ref_question_lev_2_1][0])
                     temp_4 = calculate_gadm_name(row[ref_question_lev_2_1][0])
                 if not is_nan(temp_2) or not is_nan(temp_3) or not is_nan(temp_4):
-                    for i, row in gadm_level_2_df.iterrows():
-                        temp_gadm_1 = calculate_gadm_name(str(row['NAME_1']))
-                        temp_gadm_2 = calculate_gadm_name(str(row['NAME_2']))
+                    for i, gdm_row in gadm_level_2_df.iterrows():
+                        temp_gadm_1 = calculate_gadm_name(str(gdm_row['NAME_1']))
+                        temp_gadm_2 = calculate_gadm_name(str(gdm_row['NAME_2']))
                         if temp_1 == temp_gadm_1 and (
                                 temp_2 == temp_gadm_2 or temp_3 == temp_gadm_2 or temp_4 == temp_gadm_2):
-                            result[0] = row['GID_2']
-                            result[2] = row['NAME_2']
+                            result[0] = gdm_row['GID_2']
+                            result[2] = gdm_row['NAME_2']
                             return result
                 if ref_question_lev_2_1 != '' and not is_nan(
                         row[ref_question_lev_2_1][0]) and questionnaire == 'kenya':
 
-                    for i, row in gadm_level_3_df.iterrows():
-                        temp_gadm_3 = calculate_gadm_name(str(row['NAME_3']))
-                        temp_gadm_2 = calculate_gadm_name(str(row['NAME_2']))
+                    for i, gdm_row in gadm_level_3_df.iterrows():
+                        temp_gadm_3 = calculate_gadm_name(str(gdm_row['NAME_3']))
+                        temp_gadm_2 = calculate_gadm_name(str(gdm_row['NAME_2']))
                         if temp_4 == temp_gadm_3:
-                            result[0] = row['GID_2']
-                            result[2] = row['NAME_2']
+                            result[0] = gdm_row['GID_2']
+                            result[2] = gdm_row['NAME_2']
                             return result
                 if ref_question_lev_3 != '' and not is_nan(
                         row[ref_question_lev_3][0]) and questionnaire == 'kenya':
                     temp_5 = calculate_gadm_name(row[ref_question_lev_3][0])
-                    for i, row in gadm_level_3_df.iterrows():
-                        temp_gadm_3 = calculate_gadm_name(str(row['NAME_3']))
-                        temp_gadm_2 = calculate_gadm_name(str(row['NAME_2']))
+                    for i, gdm_row in gadm_level_3_df.iterrows():
+                        temp_gadm_3 = calculate_gadm_name(str(gdm_row['NAME_3']))
+                        temp_gadm_2 = calculate_gadm_name(str(gdm_row['NAME_2']))
                         if temp_5 == temp_gadm_3:
-                            result[0] = row['GID_2']
-                            result[2] = row['NAME_2']
+                            result[0] = gdm_row['GID_2']
+                            result[2] = gdm_row['NAME_2']
                             return result
         return result
 
     return inner
 
 
-def gis_info_by_gadm_level(variable, ref_question, df):
+def gis_info_by_gadm_level(variable,
+                           gadm_df: pd.DataFrame,
+                           ref_question):
     def inner(row: pd.Series):
         result = np.nan
         if variable in GADM_variables:
-            if not is_nan(row[ref_question]['Answer']):
+            if not is_nan(row[ref_question]):
                 ref_question_gadm = ''
                 if ref_question == 'GADM_level_1':
                     ref_question_gadm = 'NAME_1'
@@ -103,25 +106,24 @@ def gis_info_by_gadm_level(variable, ref_question, df):
                     ref_question_gadm = 'NAME_2'
                 elif ref_question == 'GADM_level_3':
                     ref_question_gadm = 'NAME_3'
-                for i in list(df[ref_question].keys()):
-                    temp = row[ref_question]['Answer']
+                for i, gdm_row in gadm_df.iterrows():
+                    temp = row[ref_question]
                     if ref_question == 'GADM_level_1':
-                        if temp == df[ref_question][i][ref_question_gadm]['Answer'][0]:
-                            result = df[ref_question][i][variable]['Answer'][0]
+                        if temp == gdm_row[ref_question_gadm]:
+                            result = gdm_row[variable]
                             return result
                     elif ref_question == 'GADM_level_2':
-                        if temp == df[ref_question][i][ref_question_gadm]['Answer'][0] and \
-                                row['GADM_level_1']['Answer'] == \
-                                df[ref_question][i]['NAME_1']['Answer'][0]:
-                            result = df[ref_question][i][variable]['Answer'][0]
+                        if temp == gdm_row[ref_question_gadm] and \
+                                row['GADM_level_1'] == \
+                                gdm_row['NAME_1']:
+                            result = gdm_row[variable]
                             return result
                     elif ref_question == 'GADM_level_3':
-                        if temp == df[ref_question][i][ref_question_gadm]['Answer'][0] and \
-                                row['GADM_level_1']['Answer'] == \
-                                df[ref_question][i]['NAME_1']['Answer'][0] and \
-                                row['GADM_level_2']['Answer'] == \
-                                df[ref_question][i]['NAME_2']['Answer'][0]:
-                            result = df[ref_question][i][variable]['Answer'][0]
+                        if temp == gdm_row[ref_question_gadm] and \
+                                row['GADM_level_1'] == \
+                                gdm_row['NAME_1'] and \
+                                row['GADM_level_2'] == gdm_row['NAME_2']:
+                            result = gdm_row[variable]
                             return result
             return result
 

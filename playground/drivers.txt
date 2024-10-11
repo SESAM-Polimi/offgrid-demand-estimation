@@ -30,3 +30,33 @@ Tariff_payment_frequency_Monthly
 Tariff_payment_frequency_Other
 Tariff_payment_frequency_Weekly
 Years_of_HHH_in_community
+
+
+['cluuq',
+ 'Dwelling_quality_index',
+ 'Hours_available_electricity',
+ 'Measurement_age',
+ 'Monthly_expenditure',
+ 'Number_of_rooms',
+
+ 'Climate_zone_lev_1',
+ 'Climate_zone_lev_2',
+
+ 'Age_HHH_x',
+ 'Number_workers_x',
+ 'Socio_status_HHH_x',
+ 'Number_adults_x',
+ 'Clean_fuel_x',
+ 'Clean_fuel_y',
+ 'Ownership_motorized_vehicle_x',
+ 'Ownership_small_livestock_x',
+ 'Ownership_motorized_vehicle_x',
+ 'Age_HHH_y',
+ 'Number_workers_y',
+ 'Socio_status_HHH_y',
+ 'Number_adults_y',
+ 'Clean_fuel',
+ 'Ownership_motorized_vehicle_y',
+ 'Ownership_small_livestock_y',
+ 'Ownership_motorized_vehicle_y'
+ ]
