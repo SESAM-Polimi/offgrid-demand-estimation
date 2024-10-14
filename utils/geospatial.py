@@ -29,7 +29,7 @@ def get_gadm(
     :param ref_question_lev_1: specify the reference question for GADM level 1 e.g cty
     :param ref_question_lev_2: specify the reference question for GADM level 2 e.g dist
     :param ref_question_lev_2_1: specify the reference question for GADM level 2_1 e.g div
-    :param ref_question_lev_3: specify the reference question for GADM level 3 e.g subloc
+    :param ref_question_lev_3:  (optional to ignore use '') specify the reference question for GADM level 3 e.g subloc
     :param questionnaire:  specify the questionnaire e.g 'kenya' (Kenya has special implementation)
     :return: modifier to calculate GADM data
     """
@@ -37,8 +37,7 @@ def get_gadm(
     def inner(row: pd.Series):
         assert_many_columns_exists_in_row(row, [ref_question_lev_1,
                                                 ref_question_lev_2,
-                                                ref_question_lev_2_1,
-                                                ref_question_lev_3, ])
+                                                ref_question_lev_2_1])
 
         result = [np.nan, np.nan, np.nan, np.nan]
         if not is_nan(row[ref_question_lev_1][0]):

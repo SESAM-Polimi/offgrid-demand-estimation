@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
 import math
+from .helpers import *
 
-
-# expenditure(data,source,questionnaire,'MTF_HH_Core_Survey','-','-',hh,clusters,1,1,1,'single_response')
 
 def calculate_expenditure_weekly(weekly_expenditure_cluster):
     def inner(row: pd.Series):
@@ -39,14 +38,61 @@ def calculate_expenditure_monthly(monthly_expenditure_cluster):
 
 def calculate_expenditure_yearly(yearly_expenditure_cluster):
     def inner(row: pd.Series):
-        expenditure = 0
+        result = 0
         for i in yearly_expenditure_cluster:
             if row[i][0] == 'Do not know' or row[i][0] == '111' or math.isnan(float(row[i][0])):
-                expenditure = np.nan
-                return expenditure
-            expenditure += float(row[i][0])
-            expenditure = expenditure / 12
+                result = np.nan
+                return result
+            result += float(row[i][0])
+            result = result / 12
 
-        return expenditure
+        return result
+
+    return inner
+
+
+def expenditure_roster():
+    def inner(row: pd.Series):
+        result = 0
+        assert_many_columns_exists_in_row(row, [
+            'L_1_13', 'L_consumption_purchased', 'L_14_22', 'L_expenditure',
+            'L_23_36', 'L_expenditure_12months'
+        ])
+
+        pos_yes = [idx for idx, element in enumerate(row['L_1_13']) if
+                   element == 1]
+        for i in pos_yes:
+            value = row['L_consumption_purchased'][i]
+            if is_nan(value):
+                continue
+            if value == 888:
+                result = np.nan
+                return result
+
+            result += value * 52
+
+        pos_yes = [idx for idx, element in enumerate(row['L_14_22']) if
+                   element == 1]
+        for i in pos_yes:
+            value = row['L_expenditure'][i]
+            if value == 888:
+                result = np.nan
+                return result
+            if not is_nan(value):
+                result += value * 12
+
+        pos_yes = [idx for idx, element in enumerate(row['L_23_36']) if
+                   element == 1]
+        for i in pos_yes:
+            value = row['L_expenditure_12months'][i]
+            if value == 888:
+                result = np.nan
+                return result
+            if not is_nan(value):
+                result += value
+
+        result = result / 12
+
+        return result
 
     return inner

@@ -31,3 +31,10 @@ def assert_column_exists_in_row(row: pd.Series, col):
 def assert_many_columns_exists_in_row(row: pd.Series, cols):
     for col in cols:
         assert_column_exists_in_row(row, col)
+
+
+def filtering(value, wrong_answer_1, wrong_answer_2):
+    result = value
+    if (value == wrong_answer_1) or (value == wrong_answer_2):
+        result = np.nan
+    return result

@@ -1,9 +1,5 @@
 import math
-from typing import Callable, Any
-
-import pandas as pd
 from .constants import *
-
 from .helpers import *
 
 
@@ -70,7 +66,6 @@ def extract_working_people(ref_question):
     return inner_extractor
 
 
-# socio_status_HHH(data,source,questionnaire,'MTF_HH_Roster','Derived_variables',hh,'Main_occupation','a_4_rel_hhh','Head')
 def extract_socio_status_hhh(questionnaire, ref_question, hhh_relation_question,
                              hhh_relation_answer):
     '''
@@ -183,6 +178,57 @@ def measurement_age(ref_question_1, ref_question_2, ref_question_solar_1, ref_qu
         except Exception as e:
             print(e)
             raise AssertionError("Error in the data")
+
+    return inner
+
+
+def get_years_of_hhh_in_community_roster(hhh_relation_question,
+                                         ref_question_1, ref_question_2, hhh_relation_answer):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2, hhh_relation_question])
+        result = np.nan
+        if row[hhh_relation_question].count(
+                hhh_relation_answer) == 1:
+            pos_head = row[hhh_relation_question].index(
+                hhh_relation_answer)
+            if row[ref_question_1][pos_head] != 99:
+                result = row[ref_question_1][
+                    pos_head]
+            else:
+                result = row[ref_question_2][
+                    pos_head]
+
+        return result
+
+    return inner
+
+
+def get_years_of_hhh_in_community_multi_section(hhh_relation_question,
+                                                ref_question_1, ref_question_2, hhh_relation_answer):
+    """
+    Extracts the number of years the household head has lived in the community.
+    :param hhh_relation_question:
+    :param ref_question_1:
+    :param ref_question_2:
+    :param hhh_relation_answer:
+    :return: modifier function to extract the number of years the household head has lived in the community.
+    """
+
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2, hhh_relation_question])
+        result = np.nan
+        pos_head = row[ref_question_2][0]
+        if is_nan(pos_head):
             return result
+
+        if pos_head > len(row[hhh_relation_question]):
+            return result
+
+        if row[hhh_relation_question][pos_head - 1] == hhh_relation_answer:
+            ref_question_1_value = row[ref_question_1][0]
+            result = filtering(ref_question_1_value, 888,
+                               111)
+
+        return result
 
     return inner

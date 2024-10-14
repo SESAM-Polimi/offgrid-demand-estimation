@@ -113,7 +113,12 @@ class ODEDataset:
         return self
 
     # Exporters
-    #     to csv
+    def preview(self, n: int = 5):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        return self._df.head(n)
+
     def to_dataframe(self):
         return self._df
 

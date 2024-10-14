@@ -765,7 +765,7 @@ def measurement_age(data,source,questionnaire,section_1,section_2,hh,ref_questio
     except:
         return measurement_age
 
-# hours_available_electricity(data,source,questionnaire,'MTF_HH_Core_Survey','Derived_variables',hh,'c_c_25aii','c_c_25aii','c_c_147b_Typicalmonth','MTF_HH_Solar_Roster','c_127_device','Solar home system (Solar PV system)')
+# hours_available_electricity(data,source,questionnaire,'mtf_ng_hh_sec_c','Derived_variables',hh,'C_28b','C68b','C169b','mtf_ng_hh_sec_c_solar','C146',3)
 def hours_available_electricity(data,source,questionnaire,section_1,section_2,hh,ref_question_1,ref_question_2,ref_question_3,section_solar_devices,main_device_question,valid_answer):
     hours_available_electricity = np.nan
 
@@ -875,7 +875,7 @@ def pre_paid_tariff(data,source,questionnaire,section,hh,ref_question_1,ref_ques
 
     return pre_paid_tariff
 
-# presence_appliances(data,source,questionnaire,'MTF_HH_Core_Survey',hh,'m_m_3_group','888','17','string')
+# presence_appliances(data,source,questionnaire,'mtf_ng_hh_sec_n_elec_asset',hh,'own_asset','item_id',25,'long')
 def presence_appliances(data,source,questionnaire,section,hh,ref_question_1,ref_question_2,ref_appliance,function_mode):
     'function_mode can take values of "string" when it is present a string with the codes of the appliances present...'
     ' "long"" when two columns must be acquired, one with the item-id and one with a boolean variable indicating presence...'
