@@ -96,3 +96,28 @@ def expenditure_roster():
         return result
 
     return inner
+
+
+def expenditure_zambia():
+    def inner(row: pd.Series):
+        expenditure = 0
+        pos_yes = [idx for idx, element in enumerate(row['litem']) if
+                   element in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]]
+        for i in pos_yes:
+            if row['L2A'][i] != -8:
+                expenditure += row['L2A'][i] * 52
+        pos_yes = [idx for idx, element in enumerate(row['litem']) if
+                   element in [14, 15, 16, 17, 18, 19, 20, 21, 22]]
+        for i in pos_yes:
+            if row['L2A'][i] != -8:
+                expenditure += row['L2A'][i] * 12
+        pos_yes = [idx for idx, element in enumerate(row['litem']) if
+                   element in [23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]]
+        for i in pos_yes:
+            if row['L2A'][i] != -8:
+                expenditure += row['L2A'][i]
+        expenditure = expenditure / 12
+
+        return expenditure
+
+    return inner

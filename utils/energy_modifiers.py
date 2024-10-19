@@ -88,9 +88,9 @@ def get_hours_available_electricity(national_grid_hours, local_mini_grid_hours, 
 
     def inner(row: pd.Series):
         result = np.nan
-        assert_many_columns_exists_in_row(row,
-                                          ['Connection_type', national_grid_hours, local_mini_grid_hours,
-                                           device_question])
+        # assert_many_columns_exists_in_row(row,
+        #                                   ['Connection_type', national_grid_hours, local_mini_grid_hours,
+        #                                    device_question])
         if row['Connection_type'] == NATIONAL_GRID:
             result = float(row[national_grid_hours][0])
         elif row['Connection_type'] == LOCAL_MINI_GRID:

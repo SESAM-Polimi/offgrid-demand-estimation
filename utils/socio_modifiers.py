@@ -232,3 +232,34 @@ def get_years_of_hhh_in_community_multi_section(hhh_relation_question,
         return result
 
     return inner
+
+
+def get_people_roster(ref_question):
+    """
+    Extracts the number of people in the roster.
+    :param ref_question:
+    :return:  modifier function to extract the number of people in the roster.
+    """
+
+    def inner(row: pd.Series):
+        assert_column_exists_in_row(row, ref_question)
+        return len(row[ref_question])
+
+    return inner
+
+
+def get_people_multi_question(hh_people_cluster):
+    """
+    Extracts the number of people using multi question from hh_people cluster.
+    :param hh_people_cluster:
+    :return:  modifier function to extract the number of people using multi question from hh_people cluster.
+    """
+
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, hh_people_cluster)
+        result = 0
+        for question in hh_people_cluster:
+            result += row[question][0]
+        return result
+
+    return inner

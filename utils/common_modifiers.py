@@ -135,3 +135,19 @@ def find_any(question, answer, found, not_found):
         return result
 
     return inner
+
+
+def transform(col: str, fn: Callable[[Any], Any]):
+    def inner_transformer(df: pd.DataFrame) -> pd.DataFrame:
+        df[col] = df[col].apply(fn)
+        return df
+
+    return inner_transformer
+
+
+def transform_list(col: str, fn: Callable[[Any], Any]):
+    def inner_transformer(df: pd.DataFrame) -> pd.DataFrame:
+        df[col] = df[col].apply(fn)
+        return df
+
+    return inner_transformer

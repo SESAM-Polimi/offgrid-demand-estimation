@@ -585,7 +585,7 @@ def price_alternative(data,source,questionnaire,section,hh,ref_question_1,ref_qu
                      price_alternative = Expenditure/Quantity
     return price_alternative
 
-# expenditure(data,source,questionnaire,'MTF_HH_Core_Survey','-','-',hh,clusters,1,1,1,'single_response')
+# expenditure(data,source,questionnaire,'section l','section l','section l',hh,clusters,0,0,0,'roster_Zambia')
 def expenditure(data,source,questionnaire,section_1,section_2,section_3,hh,clusters,weekly,monthly,yearly,function_mode):
     expenditure = 0
     if function_mode == 'single_response':
@@ -765,7 +765,7 @@ def measurement_age(data,source,questionnaire,section_1,section_2,hh,ref_questio
     except:
         return measurement_age
 
-# hours_available_electricity(data,source,questionnaire,'mtf_ng_hh_sec_c','Derived_variables',hh,'C_28b','C68b','C169b','mtf_ng_hh_sec_c_solar','C146',3)
+# 'C28B','-','C164','C140',3
 def hours_available_electricity(data,source,questionnaire,section_1,section_2,hh,ref_question_1,ref_question_2,ref_question_3,section_solar_devices,main_device_question,valid_answer):
     hours_available_electricity = np.nan
 
