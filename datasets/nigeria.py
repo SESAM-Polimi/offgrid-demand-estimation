@@ -240,6 +240,7 @@ mtf_ng_hh_sec_b = ODEDataset("Nigeria/mtf_ng_hh_sec_b")
 mtf_ng_hh_sec_b.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_b.csv", encoding='latin1'
                          ).group_by("HH_ID")
 
+mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Number_of_rooms", lambda  x: x['B9'][0])
 mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature('Dwelling_wall',
                                               common_modifiers.categorize('B10',
                                                                           Dwelling_Wall_Quality_original2final))
@@ -274,10 +275,10 @@ mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Years_of_HHH_in_community",
                                                                                                           "B1", 1))
 
 mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.select([
-    "HH_ID", "Dwelling_quality_index", "Years_of_HHH_in_community"
+    "HH_ID", "Dwelling_quality_index", "Years_of_HHH_in_community","Number_of_rooms"
 ])
 
-mtf_ng_hh_sec_b.to_dataframe().head()
+
 
 # %% mtf_ng_hh_sec_l_30_days_expen
 mtf_ng_hh_sec_l_30_days_expen = ODEDataset("Nigeria/mtf_ng_hh_sec_l_30_days_expen")
@@ -506,4 +507,6 @@ Nigeria = Nigeria.merge(NG_MTF_HH_SEC_0, "HH_ID")
 Nigeria = Nigeria.merge(mtf_hh_sec_hh_asset_long, "HH_ID")
 Nigeria = Nigeria.merge(mtf_ng_hh_sec_n_elec_asset, "HH_ID")
 
-Nigeria.to_csv("../playground/data/ESMAP/nigeria/Nigeria.csv")
+filname = "../playground/data/ESMAP/nigeria/Nigeria.csv"
+Nigeria.to_csv(filname)
+print("Nigeria done. Exported to ", filname)

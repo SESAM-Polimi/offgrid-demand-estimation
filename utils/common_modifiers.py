@@ -151,3 +151,25 @@ def transform_list(col: str, fn: Callable[[Any], Any]):
         return df
 
     return inner_transformer
+
+
+def int_each(x):
+    result = []
+    for i in x:
+        if not is_nan(i):
+            result.append(int(i))
+        else:
+            result.append(np.nan)
+    return result
+
+
+def transform_list_int(col: str):
+    return transform_list(col, int_each)
+
+
+def take(idx: int):
+    def inner(row: pd.Series):
+        assert len(row) > idx
+        return row[idx]
+
+    return inner

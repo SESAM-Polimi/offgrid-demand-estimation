@@ -221,6 +221,8 @@ def get_years_of_hhh_in_community_multi_section(hhh_relation_question,
         if is_nan(pos_head):
             return result
 
+        if is_nan(row[hhh_relation_question]):
+            return np.nan
         if pos_head > len(row[hhh_relation_question]):
             return result
 

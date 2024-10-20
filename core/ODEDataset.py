@@ -16,6 +16,9 @@ class ODEDataset:
         self._df: pd.DataFrame | None = df
         self.name = name
 
+    def __len__(self):
+        return len(self._df)
+
     # importers
     '''
     This function reads a csv file and stores it in the dataset object.
@@ -81,6 +84,13 @@ class ODEDataset:
 
         self._df = self._df.groupby(by).agg(lambda x: list(x)).reset_index()
         return ODEDataset(self.name, self._df)
+
+    def drop_columns(self, cols: [str]):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        self._df = self._df.drop(columns=cols)
+        return self
 
     # Mergers
     #  Add another Dataset

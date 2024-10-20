@@ -6,10 +6,10 @@ sys.path.append("../")  # Adds higher directory to python modules path.
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from core.ODEDataset import ODEDataset
 from utils import common_modifiers, dwelling_modifiers, socio_modifiers, finance_modifiers, appliances_modifiers, \
-    geospatial
+    geospatial, energy_modifiers
 from utils import constants
 
-#%% Clusters
+# %% Clusters
 
 cooking_hrs_cluster = [
     "i_23_hrs_morning",
@@ -27,7 +27,7 @@ monthly_expenditure_cluster = ['l_l_12',
                                'l_l_18',
                                'l_l_19']
 
-#%% Categories
+# %% Categories
 Main_occupation_original2final = {
     'Unemployed': 'Unemployed',
     'Student': 'Unemployed',
@@ -158,7 +158,7 @@ Ownership_motorized_vehicle_original2final = {
     'Tractor': 0
 }
 
-#%% # MTF_HH_Roster
+# %% # MTF_HH_Roster
 
 
 MTF_HH_Roster = ODEDataset("keyna/MTF_HH_Roster")
@@ -185,32 +185,30 @@ MTF_HH_Roster = MTF_HH_Roster.new_feature('Socio_status_HHH',
 
 MTF_HH_Roster = MTF_HH_Roster.new_feature('Number_adults', socio_modifiers.extract_age_groups('a_5_age', 'adults'))
 MTF_HH_Roster = MTF_HH_Roster.select(
-    ['cluuq', 'Age_HHH', 'Number_workers', 'Socio_status_HHH', 'Number_adults'])
+    ['cluuq', 'Age_HHH', 'Number_workers', 'HH_with_home_business', "Education_level_HHH", 'Socio_status_HHH',
+     'Number_adults'])
 
-#%% # MTF_HH_Cooking_Data_Final
+# %% # MTF_HH_Cooking_Data_Final
 
 MTF_HH_Cooking_Data_Final = ODEDataset("keyna/MTF_HH_Cooking_Data_Final")
 MTF_HH_Cooking_Data_Final.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Cooking_Data_Final.csv",
                                    encoding='ISO-8859-1').group_by("cluuq")
 
 MTF_HH_Cooking_Data_Final = MTF_HH_Cooking_Data_Final.new_feature('Fuel_usage',
-                                                                  dwelling_modifiers.extract_fuel_usage(
+                                                                  energy_modifiers.extract_fuel_usage(
                                                                       cooking_hrs_cluster))
 
 MTF_HH_Cooking_Data_Final = MTF_HH_Cooking_Data_Final.new_feature('Clean_fuel',
-                                                                  dwelling_modifiers.is_clean_fuel(
+                                                                  energy_modifiers.is_clean_fuel(
                                                                       constants.CLEAN_FUELS,
                                                                       'i_18_a_1st_fuel'))
 
 MTF_HH_Cooking_Data_Final = MTF_HH_Cooking_Data_Final.select(['cluuq', 'Clean_fuel'])
 
-#%% # MTF_HH_Core_Survey
-
+#%%  MTF_HH_Core_Survey
 MTF_HH_Core_Survey = ODEDataset("keyna/MTF_HH_Core_Survey")
 MTF_HH_Core_Survey.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Core_Survey.csv", encoding='ISO-8859-1').group_by(
     "cluuq")
-
-
 
 MTF_HH_Solar_Roster = ODEDataset('kenya/MTF_HH_Solar_Roster').from_csv(
     "../playground/data/ESMAP/kenya/MTF_HH_Solar_Roster.csv", encoding='ISO-8859-1')
@@ -218,9 +216,6 @@ cls = [c for c in MTF_HH_Solar_Roster.get_columns() if c not in MTF_HH_Core_Surv
 cls.append("cluuq")
 MTF_HH_Solar_Roster = MTF_HH_Solar_Roster.select(cls)
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.merge(MTF_HH_Solar_Roster, on='cluuq', how='left')
-
-
-
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature('Number_of_rooms',
                                                     lambda x: x['b_b_9'][0])
@@ -249,17 +244,17 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Dwelling_quality_index", dw
 
 connection_type_valid_answers = {constants.NATIONAL_GRID: 'Yes', constants.LOCAL_MINI_GRID: 'Yes',
                                  constants.SOLAR_HOME_SYSTEM: 1}
-connection_type_modifier = dwelling_modifiers.get_connection_type('c_c_2',
-                                                                  'c_c_38',
-                                                                  'c_c_q122_3',
-                                                                  connection_type_valid_answers)
+connection_type_modifier = energy_modifiers.get_connection_type('c_c_2',
+                                                                'c_c_38',
+                                                                'c_c_q122_3',
+                                                                connection_type_valid_answers)
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Connection_type", connection_type_modifier)
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature(
     "Hours_available_electricity",
-    dwelling_modifiers.get_hours_available_electricity('c_c_25aii', 'c_c_25aii', 'c_127_device',
-                                                       'c_c_147b_Typicalmonth'))
+    energy_modifiers.get_hours_available_electricity('c_c_25aii', 'c_c_25aii', 'c_127_device',
+                                                     'c_c_147b_Typicalmonth', constants.SOLAR_HOME_SYSTEM_SOLAR_PV))
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature('Measurement_age',
                                                     socio_modifiers.measurement_age('c_c_7', 'c_c_38', 'c_135_yrs',
@@ -268,8 +263,13 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature('Measurement_age',
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature('Monthly_expenditure',
                                                     finance_modifiers.calculate_expenditure_monthly(
                                                         monthly_expenditure_cluster))
-
-
+MTF_HH_Roster_relation_only = ODEDataset("keyna/MTF_HH_Roster_relation_only")
+MTF_HH_Roster_relation_only.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Roster.csv").group_by("cluuq")
+MTF_HH_Core_Survey = MTF_HH_Core_Survey.merge(MTF_HH_Roster_relation_only.select(['cluuq', 'a_4_rel_hhh']), on='cluuq',
+                                              how='left')
+MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Years_of_HHH_in_community",
+                                                    socio_modifiers.get_years_of_hhh_in_community_multi_section(
+                                                        'a_4_rel_hhh', 'b_b_4', 'b_b_1', 'Head'))
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Presence_smartphone_charger",
                                                     appliances_modifiers.presence_appliances_string('m_m_3_group',
@@ -315,15 +315,11 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Presence_flat_color_TV",
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Presence_TV", common_modifiers.multi_unify_presence(
     ['Presence_black&white_TV', 'Presence_color_TV', 'Presence_flat_color_TV']))
 
-
 gadm_level_1_df = pd.read_excel("../playground/data/ESMAP/kenya/GADM_level_1.xlsx")
 gadm_level_2_df = pd.read_excel("../playground/data/ESMAP/kenya/GADM_level_2.xlsx")
 gadm_level_3_df = pd.read_csv("../playground/data/ESMAP/kenya/GADM_level_3.csv")
-gadm_level_1_df.head()
-
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.apply(common_modifiers.add_const_driver("GADM_level_0", "Kenya"))
-
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("GADM_level_raw", geospatial.get_gadm(
     gadm_level_1_df,
@@ -349,6 +345,7 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Climate_zone_lev_2",
                                                                                       ))
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.select(['cluuq',
+                                                'Years_of_HHH_in_community',
                                                 'Dwelling_quality_index',
                                                 'Hours_available_electricity',
                                                 'Measurement_age',
@@ -366,7 +363,7 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.select(['cluuq',
 
                                                 ])
 
-#%%  # Asset_Data_Final
+# %%  # Asset_Data_Final
 M1_Asset_Data_Final = ODEDataset('kenya/MTF_HH_Sec.M1_Asset_Data_Final').from_csv(
     "../playground/data/ESMAP/kenya/MTF_HH_Sec.M1_Asset_Data_Final.csv", encoding='ISO-8859-1')
 
@@ -414,12 +411,15 @@ M2_Asset_Data_Final = M2_Asset_Data_Final.new_feature("Ownership_large_livestock
 
 Asset_Data_Final = M1_Asset_Data_Final.merge(M2_Asset_Data_Final, on="cluuq")
 Asset_Data_Final = Asset_Data_Final.select(
-    ['cluuq', 'Ownership_motorized_vehicle', 'Ownership_small_livestock', 'Ownership_motorized_vehicle'])
+    ['cluuq', 'Ownership_motorized_vehicle', 'Ownership_small_livestock', 'Ownership_large_livestock'])
 
-
-#%% # Merge All
+#%% Merge All
 
 Kenya = MTF_HH_Core_Survey.merge(MTF_HH_Roster, on='cluuq')
 Kenya = Kenya.merge(Asset_Data_Final, on='cluuq')
+Kenya = Kenya.merge(MTF_HH_Cooking_Data_Final, on='cluuq')
 
-Kenya.to_csv("../playground/data/ESMAP/kenya/kenya.csv")
+filename = "../playground/data/ESMAP/kenya/kenya.csv"
+Kenya.to_csv(filename)
+
+print("Kenya done. File saved to", filename)
