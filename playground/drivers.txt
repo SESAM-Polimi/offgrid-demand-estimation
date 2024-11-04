@@ -8,17 +8,19 @@ Number_of_rooms
 
 Clean_fuel
 
-Climate_zone_lev_1_3.0
-Climate_zone_lev_1_6.0
-Climate_zone_lev_1_9.0
-Climate_zone_lev_1_11.0
-Climate_zone_lev_1_15.0
 
 Dwelling_quality_index
 Hours_available_electricity
 Measurement_age
 Monthly_expenditure
 Years_of_HHH_in_community
+
+Climate_zone_lev_1_3.0
+Climate_zone_lev_1_6.0
+Climate_zone_lev_1_9.0
+Climate_zone_lev_1_11.0
+Climate_zone_lev_1_15.0
+
 
 
 Ownership_large_livestock

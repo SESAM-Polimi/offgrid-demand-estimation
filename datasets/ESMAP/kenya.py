@@ -2,7 +2,7 @@ import os
 import sys
 import pandas as pd
 
-sys.path.append("../")  # Adds higher directory to python modules path.
+sys.path.append("../../")  # Adds higher directory to python modules path.
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from core.ODEDataset import ODEDataset
 from utils import common_modifiers, dwelling_modifiers, socio_modifiers, finance_modifiers, appliances_modifiers, \
@@ -162,7 +162,7 @@ Ownership_motorized_vehicle_original2final = {
 
 
 MTF_HH_Roster = ODEDataset("keyna/MTF_HH_Roster")
-MTF_HH_Roster.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Roster.csv").group_by("cluuq")
+MTF_HH_Roster.from_csv("../../playground/data/ESMAP/kenya/MTF_HH_Roster.csv").group_by("cluuq")
 
 MTF_HH_Roster = MTF_HH_Roster.new_feature("Age_HHH",
                                           socio_modifiers.extract_age_of_head('a_5_age', 'a_4_rel_hhh', 'Head'))
@@ -191,7 +191,7 @@ MTF_HH_Roster = MTF_HH_Roster.select(
 # %% # MTF_HH_Cooking_Data_Final
 
 MTF_HH_Cooking_Data_Final = ODEDataset("keyna/MTF_HH_Cooking_Data_Final")
-MTF_HH_Cooking_Data_Final.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Cooking_Data_Final.csv",
+MTF_HH_Cooking_Data_Final.from_csv("../../playground/data/ESMAP/kenya/MTF_HH_Cooking_Data_Final.csv",
                                    encoding='ISO-8859-1').group_by("cluuq")
 
 MTF_HH_Cooking_Data_Final = MTF_HH_Cooking_Data_Final.new_feature('Fuel_usage',
@@ -207,11 +207,11 @@ MTF_HH_Cooking_Data_Final = MTF_HH_Cooking_Data_Final.select(['cluuq', 'Clean_fu
 
 #%%  MTF_HH_Core_Survey
 MTF_HH_Core_Survey = ODEDataset("keyna/MTF_HH_Core_Survey")
-MTF_HH_Core_Survey.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Core_Survey.csv", encoding='ISO-8859-1').group_by(
+MTF_HH_Core_Survey.from_csv("../../playground/data/ESMAP/kenya/MTF_HH_Core_Survey.csv", encoding='ISO-8859-1').group_by(
     "cluuq")
 
 MTF_HH_Solar_Roster = ODEDataset('kenya/MTF_HH_Solar_Roster').from_csv(
-    "../playground/data/ESMAP/kenya/MTF_HH_Solar_Roster.csv", encoding='ISO-8859-1')
+    "../../../playground/data/ESMAP/kenya/MTF_HH_Solar_Roster.csv", encoding='ISO-8859-1')
 cls = [c for c in MTF_HH_Solar_Roster.get_columns() if c not in MTF_HH_Core_Survey.get_columns()]
 cls.append("cluuq")
 MTF_HH_Solar_Roster = MTF_HH_Solar_Roster.select(cls)
@@ -264,7 +264,7 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature('Monthly_expenditure',
                                                     finance_modifiers.calculate_expenditure_monthly(
                                                         monthly_expenditure_cluster))
 MTF_HH_Roster_relation_only = ODEDataset("keyna/MTF_HH_Roster_relation_only")
-MTF_HH_Roster_relation_only.from_csv("../playground/data/ESMAP/kenya/MTF_HH_Roster.csv").group_by("cluuq")
+MTF_HH_Roster_relation_only.from_csv("../../playground/data/ESMAP/kenya/MTF_HH_Roster.csv").group_by("cluuq")
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.merge(MTF_HH_Roster_relation_only.select(['cluuq', 'a_4_rel_hhh']), on='cluuq',
                                               how='left')
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Years_of_HHH_in_community",
@@ -315,9 +315,9 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Presence_flat_color_TV",
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Presence_TV", common_modifiers.multi_unify_presence(
     ['Presence_black&white_TV', 'Presence_color_TV', 'Presence_flat_color_TV']))
 
-gadm_level_1_df = pd.read_excel("../playground/data/ESMAP/kenya/GADM_level_1.xlsx")
-gadm_level_2_df = pd.read_excel("../playground/data/ESMAP/kenya/GADM_level_2.xlsx")
-gadm_level_3_df = pd.read_csv("../playground/data/ESMAP/kenya/GADM_level_3.csv")
+gadm_level_1_df = pd.read_excel("../../playground/data/ESMAP/kenya/GADM_level_1.xlsx")
+gadm_level_2_df = pd.read_excel("../../playground/data/ESMAP/kenya/GADM_level_2.xlsx")
+gadm_level_3_df = pd.read_csv("../../../playground/data/ESMAP/kenya/GADM_level_3.csv")
 
 MTF_HH_Core_Survey = MTF_HH_Core_Survey.apply(common_modifiers.add_const_driver("GADM_level_0", "Kenya"))
 
@@ -365,7 +365,7 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.select(['cluuq',
 
 # %%  # Asset_Data_Final
 M1_Asset_Data_Final = ODEDataset('kenya/MTF_HH_Sec.M1_Asset_Data_Final').from_csv(
-    "../playground/data/ESMAP/kenya/MTF_HH_Sec.M1_Asset_Data_Final.csv", encoding='ISO-8859-1')
+    "../../../playground/data/ESMAP/kenya/MTF_HH_Sec.M1_Asset_Data_Final.csv", encoding='ISO-8859-1')
 
 M1_Asset_Data_Final = M1_Asset_Data_Final.group_by("cluuq")
 M1_Asset_Data_Final = M1_Asset_Data_Final.new_feature("Ownership_motorized_vehicle_all",
@@ -387,7 +387,7 @@ M1_Asset_Data_Final = M1_Asset_Data_Final.new_feature("Ownership_motorized_vehic
                                                                                 'Yes', 'No'))
 
 M2_Asset_Data_Final = ODEDataset('kenya/MTF_HH_Sec.M2_Asset_Data_Final').from_csv(
-    "../playground/data/ESMAP/kenya/MTF_HH_Sec.M2_Asset_Data_Final.csv", encoding='ISO-8859-1')
+    "../../../playground/data/ESMAP/kenya/MTF_HH_Sec.M2_Asset_Data_Final.csv", encoding='ISO-8859-1')
 
 M2_Asset_Data_Final = M2_Asset_Data_Final.group_by("cluuq")
 
@@ -419,7 +419,7 @@ Kenya = MTF_HH_Core_Survey.merge(MTF_HH_Roster, on='cluuq')
 Kenya = Kenya.merge(Asset_Data_Final, on='cluuq')
 Kenya = Kenya.merge(MTF_HH_Cooking_Data_Final, on='cluuq')
 
-filename = "../playground/data/ESMAP/kenya/kenya.csv"
+filename = "../../../playground/data/ESMAP/kenya/kenya.csv"
 Kenya.to_csv(filename)
 
 print("Kenya done. File saved to", filename)

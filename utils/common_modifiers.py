@@ -12,10 +12,11 @@ def categorize(feature: str, categories: dict):
         if value is None or value is np.nan:
             return np.nan
 
+        keys = categories.keys()
         if type(value) is list:
             result = []
             for v in value:
-                if is_nan(v):
+                if is_nan(v) or v not in keys:
                     result.append(np.nan)
                 else:
                     result.append(categories[v])
@@ -167,9 +168,50 @@ def transform_list_int(col: str):
     return transform_list(col, int_each)
 
 
-def take(idx: int):
+def take(col: str, idx: int):
+    def inner_transformer(df: pd.DataFrame) -> pd.DataFrame:
+        df[col] = df[col].apply(lambda x: x[idx])
+        return df
+
+    return inner_transformer
+
+
+def group(drivers: list):
     def inner(row: pd.Series):
-        assert len(row) > idx
-        return row[idx]
+        assert_many_columns_exists_in_row(row, drivers)
+
+        values = []
+        for driver in drivers:
+            values.append(row[driver])
+
+        return values
+
+    return inner
+
+
+def take_one_with_value(drivers: list, search_value: Any, not_found_value: Any = np.nan):
+    """
+    Search with one driver with value {search_value} or return {not_found_value}
+    :param drivers:  list of drivers (singular value) if the drivers is a list only take the first
+    :param search_value: the value we are searching for
+    :param not_found_value: the return value if none is found (default np.nan)
+    :return:
+    """
+
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, drivers)
+        values = []
+        for driver in drivers:
+            row_value = row[driver]
+            if type(row_value) == list:
+                values.append(row_value[0])
+            else:
+                values.append(row_value)
+
+        for value in values:
+            if value == search_value:
+                return value
+
+        return not_found_value
 
     return inner

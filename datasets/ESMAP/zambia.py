@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.path.append("../")  # Adds higher directory to python modules path.
+sys.path.append("../../")  # Adds higher directory to python modules path.
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from core.ODEDataset import ODEDataset
 from utils import common_modifiers, dwelling_modifiers, socio_modifiers, finance_modifiers, appliances_modifiers, \
@@ -228,7 +228,7 @@ Province_raw_original2final = {
 # %% Section A: Socio Data
 
 section_a = ODEDataset("Zambia/Section A")
-section_a.from_csv("../playground/data/ESMAP/zambia/section a.csv", encoding='latin1'
+section_a.from_csv("../../playground/data/ESMAP/zambia/section a.csv", encoding='latin1'
                    ).group_by("HouseholdID")
 
 section_a = section_a.new_feature("Age_HHH", socio_modifiers.extract_age_of_head("A5", "A4", 1))
@@ -260,12 +260,12 @@ section_a = section_a.select(
 
 
 express_sections = ODEDataset("Zambia/express sections")
-express_sections.from_csv("../playground/data/ESMAP/zambia/express sections.csv", encoding='latin1'
+express_sections.from_csv("../../playground/data/ESMAP/zambia/express sections.csv", encoding='latin1'
                           ).group_by("HouseholdID")
 
 mtf_a1 = ODEDataset("Nigeria/mtf_ng_hh_sec_a1 helper")
 
-mtf_a1.from_csv("../playground/data/ESMAP/zambia/section a.csv", encoding='latin1'
+mtf_a1.from_csv("../../playground/data/ESMAP/zambia/section a.csv", encoding='latin1'
                 ).group_by("HouseholdID").select(["HouseholdID", "A4"])
 
 express_sections = express_sections.merge(mtf_a1, "HouseholdID")
@@ -314,7 +314,7 @@ express_sections = express_sections.new_feature("Years_of_HHH_in_community",
                                                                                                             "B1", 1))
 
 section_c_solar_devices = ODEDataset("Zambia/section_c_solar_devices")
-section_c_solar_devices.from_csv("../playground/data/ESMAP/zambia/section c solar devices.csv", encoding='latin1'
+section_c_solar_devices.from_csv("../../playground/data/ESMAP/zambia/section c solar devices.csv", encoding='latin1'
                                  ).group_by("HouseholdID")
 
 express_sections = express_sections.merge(section_c_solar_devices, "HouseholdID")
@@ -355,7 +355,7 @@ express_sections = express_sections.new_feature("GADM_level_1", lambda x: x['GAD
 
 express_sections = express_sections.apply(common_modifiers.add_const_driver("GADM_level_2", np.nan))
 
-gadm_level_1_df = pd.read_excel("../playground/data/ESMAP/zambia/GADM_level_1.xlsx")
+gadm_level_1_df = pd.read_excel("../../playground/data/ESMAP/zambia/GADM_level_1.xlsx")
 express_sections = express_sections.new_feature("Climate_zone_lev_1",
                                                 geospatial.gis_info_by_gadm_level('Climate_majority',
                                                                                   gadm_level_1_df,
@@ -373,10 +373,10 @@ express_sections = express_sections.select([
 # %% Section I: Finance Data
 
 section_i = ODEDataset("Zambia/Section I")
-section_i.from_csv("../playground/data/ESMAP/zambia/section i.csv",
+section_i.from_csv("../../playground/data/ESMAP/zambia/section i.csv",
                    encoding='latin1').group_by("HouseholdID")
 section_l = ODEDataset("Zambia/Section L")
-section_l.from_csv("../playground/data/ESMAP/zambia/section l.csv",
+section_l.from_csv("../../playground/data/ESMAP/zambia/section l.csv",
                    encoding='latin1').group_by("HouseholdID")
 
 section_i = section_i.merge(section_l, "HouseholdID")
@@ -395,7 +395,7 @@ section_i = section_i.select(["HouseholdID", "Monthly_expenditure", "Clean_fuel"
 
 # %% Section M: Ownership
 section_m = ODEDataset("Zambia/Section M")
-section_m.from_csv("../playground/data/ESMAP/zambia/section m.csv",
+section_m.from_csv("../../playground/data/ESMAP/zambia/section m.csv",
                    encoding='latin1').group_by("HouseholdID")
 
 section_m = section_m.apply(
@@ -441,7 +441,7 @@ section_m = section_m.select(
 
 # %% Section N: Appliances
 section_n = ODEDataset("Zambia/Section N")
-section_n.from_csv("../playground/data/ESMAP/zambia/section n.csv",
+section_n.from_csv("../../playground/data/ESMAP/zambia/section n.csv",
                    encoding='latin1').group_by("HouseholdID")
 
 section_n = section_n.new_feature("Presence_smartphone_charger",
@@ -526,7 +526,7 @@ Zambia = Zambia.merge(section_i, "HouseholdID")
 Zambia = Zambia.merge(section_m, "HouseholdID")
 Zambia = Zambia.merge(section_n, "HouseholdID")
 
-filename = "../playground/data/ESMAP/zambia/Zambia.csv"
+filename = "../../../playground/data/ESMAP/zambia/Zambia.csv"
 Zambia.to_csv(filename)
 
 print("All done", "exporting to ", filename)

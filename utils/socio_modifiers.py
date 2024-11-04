@@ -53,6 +53,44 @@ def extract_head_w_home_business(ref_question_1, ref_question_2, ref_question_3,
     return inner
 
 
+def extract_head_w_home_business_lsms(ref_question_1, ref_question_2, ref_question_3):
+    """
+    Extracts the head of the household with a home business. in LSMS datasets
+    :param ref_question_1:  The reference question for the main occupation.
+    :param ref_question_2:  The reference question for the employment status.
+    :param ref_question_3:  The reference question for the age.
+    :return:
+    """
+
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2, ref_question_3])
+
+        result = ['No', np.nan]
+        temp1 = 0
+        temp2 = 0
+        for i in range(len(row[ref_question_1])):
+            if row[ref_question_1][i] == 1:
+                if row[ref_question_2][i] == 1 or \
+                        row[ref_question_2][i] == 2:
+                    temp1 += 1
+                elif is_nan(row[ref_question_2][i]):
+                    temp2 += 1
+        if temp1 > 0:
+            result[0] = 'Yes'
+            result[1] = 'Agri'
+        elif temp1 == 0 and temp2 > 0:
+            result[0] = np.nan
+        if any(t == 1 for t in row[ref_question_3]):
+            if result[0] == 'Yes':
+                result[1] = 'Multiple'
+            elif result[0] == 'No' or is_nan(result[0]):
+                result[0] = 'Yes'
+                result[1] = 'Non-agri'
+        return result
+
+    return inner
+
+
 def extract_working_people(ref_question):
     def inner_extractor(row: pd.Series) -> float | int:
         if any(is_nan(t) for t in row[ref_question]):
@@ -93,6 +131,7 @@ def extract_socio_status_hhh(questionnaire, ref_question, hhh_relation_question,
                 result = row[ref_question][pos_head]
 
         if questionnaire == 'Tanzania':
+            assert_many_columns_exists_in_row(row, ["HHH_relation_pos", "sdd_indid"])
             for i in range(len(row['sdd_indid'])):
                 if row['sdd_indid'][i] == \
                         row['HHH_relation_pos']:
@@ -111,8 +150,15 @@ def extract_socio_status_hhh(questionnaire, ref_question, hhh_relation_question,
     return inner
 
 
-# age_groups(data,source,questionnaire,'MTF_HH_Roster',hh,'a_5_age','adults')
 def extract_age_groups(ref_question, function_mode):
+    """
+    Extracts the number of people in the different age groups.
+
+    Parameters:
+    ref_question (str): The reference question for the age.
+    function_mode (str): The mode of the function. It can be 'youngsters', 'adults', or 'elderly'.
+    """
+
     def inner(row: pd.Series):
         result = 0
         if any(t == 888 for t in row[ref_question]) or any(
@@ -262,6 +308,26 @@ def get_people_multi_question(hh_people_cluster):
         result = 0
         for question in hh_people_cluster:
             result += row[question][0]
+        return result
+
+    return inner
+
+
+def extract_relation_pos(ref_question_1, ref_question_2, answer):
+    """
+    Extracts the relation position of the household head.
+    :param ref_question_1:  The reference question for the relation position.
+    :param ref_question_2:  The reference question for the relation position.
+    :param answer:  The answer for the relation position.
+    :return: modifier function to extract the relation position of the household head.
+    """
+
+    def inner(row: pd.Series):
+        result = np.nan
+        for i in range(len(row[ref_question_1])):
+            if row[ref_question_1][i] == answer:
+                result = row[ref_question_2][i]
+                return result
         return result
 
     return inner

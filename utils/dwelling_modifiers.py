@@ -22,6 +22,7 @@ def get_dwelling_toilet(question_1, question_2, question_3,
     return inner
 
 
+
 def get_dwelling_toilet_list(question_1, question_2, question_3, question_4):
     def inner(row: pd.Series):
         assert_many_columns_exists_in_row(row, [question_1, question_2, question_3, question_4])

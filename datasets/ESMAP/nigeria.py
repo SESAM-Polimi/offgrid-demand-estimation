@@ -3,7 +3,7 @@ import sys
 import pandas as pd
 import numpy as np
 
-sys.path.append("../")  # Adds higher directory to python modules path.
+sys.path.append("../../")  # Adds higher directory to python modules path.
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 from core.ODEDataset import ODEDataset
 from utils import common_modifiers, dwelling_modifiers, socio_modifiers, finance_modifiers, appliances_modifiers, \
@@ -207,7 +207,7 @@ Tariff_payment_frequency_original2final = {
 # %% mtf_ng_hh_sec_a1
 
 mtf_ng_hh_sec_a1 = ODEDataset("Nigeria/mtf_ng_hh_sec_a1")
-mtf_ng_hh_sec_a1.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_a1.csv", encoding='latin1'
+mtf_ng_hh_sec_a1.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_a1.csv", encoding='latin1'
                           ).group_by("HH_ID")
 
 mtf_ng_hh_sec_a1 = mtf_ng_hh_sec_a1.new_feature("Age_HHH", socio_modifiers.extract_age_of_head("A5", "A4", 1))
@@ -237,7 +237,7 @@ mtf_ng_hh_sec_a1.to_dataframe().head()
 
 # %% mtf_ng_hh_sec_b
 mtf_ng_hh_sec_b = ODEDataset("Nigeria/mtf_ng_hh_sec_b")
-mtf_ng_hh_sec_b.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_b.csv", encoding='latin1'
+mtf_ng_hh_sec_b.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_b.csv", encoding='latin1'
                          ).group_by("HH_ID")
 
 mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Number_of_rooms", lambda  x: x['B9'][0])
@@ -265,7 +265,7 @@ mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Dwelling_quality_index", dwelling
 
 mtf_a1 = ODEDataset("Nigeria/mtf_ng_hh_sec_a1 helper")
 
-mtf_a1.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_a1.csv", encoding='latin1'
+mtf_a1.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_a1.csv", encoding='latin1'
                 ).group_by("HH_ID").select(["HH_ID", "A4"])
 
 mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.merge(mtf_a1, "HH_ID")
@@ -282,13 +282,13 @@ mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.select([
 
 # %% mtf_ng_hh_sec_l_30_days_expen
 mtf_ng_hh_sec_l_30_days_expen = ODEDataset("Nigeria/mtf_ng_hh_sec_l_30_days_expen")
-mtf_ng_hh_sec_l_30_days_expen.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_30_days_expen.csv",
+mtf_ng_hh_sec_l_30_days_expen.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_30_days_expen.csv",
                                        encoding='latin1').group_by("HH_ID")
 mtf_ng_hh_sec_l_12_months_expen = ODEDataset("Nigeria/mtf_ng_hh_sec_l_12_months_expen")
-mtf_ng_hh_sec_l_12_months_expen.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_12_months_expen.csv",
+mtf_ng_hh_sec_l_12_months_expen.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_12_months_expen.csv",
                                          encoding='latin1').group_by("HH_ID")
 mtf_ng_hh_sec_l_consumption = ODEDataset("Nigeria/mtf_ng_hh_sec_l_consumption")
-mtf_ng_hh_sec_l_consumption.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_consumption.csv",
+mtf_ng_hh_sec_l_consumption.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_l_consumption.csv",
                                      encoding='latin1').group_by("HH_ID")
 mtf_ng_hh_sec_l_30_days_expen = mtf_ng_hh_sec_l_30_days_expen.merge(mtf_ng_hh_sec_l_12_months_expen, "HH_ID")
 mtf_ng_hh_sec_l_30_days_expen = mtf_ng_hh_sec_l_30_days_expen.merge(mtf_ng_hh_sec_l_consumption, "HH_ID")
@@ -300,9 +300,9 @@ mtf_ng_hh_sec_l_30_days_expen = mtf_ng_hh_sec_l_30_days_expen.select(["HH_ID", "
 
 # %% mtf_ng_hh_sec_c
 mtf_ng_hh_sec_c = ODEDataset("Nigeria/mtf_ng_hh_sec_c")
-mtf_ng_hh_sec_c.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_c.csv", encoding='latin1').group_by("HH_ID")
+mtf_ng_hh_sec_c.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_c.csv", encoding='latin1').group_by("HH_ID")
 mtf_ng_hh_sec_c_solar = ODEDataset("Nigeria/mtf_ng_hh_sec_c_solar")
-mtf_ng_hh_sec_c_solar.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_c_solar.csv", encoding='latin1'
+mtf_ng_hh_sec_c_solar.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_c_solar.csv", encoding='latin1'
                                ).group_by("HH_ID")
 
 mtf_ng_hh_sec_c = mtf_ng_hh_sec_c.merge(mtf_ng_hh_sec_c_solar, "HH_ID")
@@ -329,7 +329,7 @@ mtf_ng_hh_sec_c = mtf_ng_hh_sec_c.select(
 
 # %% mtf_ng_hh_sec_i_stove
 mtf_ng_hh_sec_i_stove = ODEDataset("Nigeria/mtf_ng_hh_sec_i_stove")
-mtf_ng_hh_sec_i_stove.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_i_stove.csv",
+mtf_ng_hh_sec_i_stove.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_i_stove.csv",
                                encoding='latin1').group_by("HH_ID")
 
 # fuel_usage(data,source,questionnaire,'mtf_ng_hh_sec_i_stove',hh,question,clusters)
@@ -342,11 +342,11 @@ mtf_ng_hh_sec_i_stove = mtf_ng_hh_sec_i_stove.select(["HH_ID", "Clean_fuel"])
 
 # %% NG_MTF_HH_SEC_0
 NG_MTF_HH_SEC_0 = ODEDataset("Nigeria/NG_MTF_HH_SEC_0")
-NG_MTF_HH_SEC_0.from_excel("../playground/data/ESMAP/nigeria/NG_MTF_HH_SEC_0.xlsx", ).group_by("HH_ID")
+NG_MTF_HH_SEC_0.from_excel("../../playground/data/ESMAP/nigeria/NG_MTF_HH_SEC_0.xlsx", ).group_by("HH_ID")
 NG_MTF_HH_SEC_0 = NG_MTF_HH_SEC_0.apply(common_modifiers.add_const_driver("GADM_level_0", "Nigeria"))
 
-gadm_level_1_df = pd.read_excel("../playground/data/ESMAP/nigeria/GADM_level_1.xlsx")
-gadm_level_2_df = pd.read_excel("../playground/data/ESMAP/nigeria/GADM_level_2.xlsx")
+gadm_level_1_df = pd.read_excel("../../playground/data/ESMAP/nigeria/GADM_level_1.xlsx")
+gadm_level_2_df = pd.read_excel("../../playground/data/ESMAP/nigeria/GADM_level_2.xlsx")
 
 NG_MTF_HH_SEC_0 = NG_MTF_HH_SEC_0.new_feature("GADM_level_raw", geospatial.get_gadm(
     gadm_level_1_df,
@@ -376,7 +376,7 @@ NG_MTF_HH_SEC_0 = NG_MTF_HH_SEC_0.select([
 
 # %% mtf_hh_sec_hh_asset_long
 mtf_hh_sec_hh_asset_long = ODEDataset("Nigeria/mtf_hh_sec_hh_asset_long")
-mtf_hh_sec_hh_asset_long.from_csv("../playground/data/ESMAP/nigeria/mtf_hh_sec_hh_asset_long.csv",
+mtf_hh_sec_hh_asset_long.from_csv("../../playground/data/ESMAP/nigeria/mtf_hh_sec_hh_asset_long.csv",
                                   encoding='latin1').group_by("HH_ID")
 
 mtf_hh_sec_hh_asset_long = mtf_hh_sec_hh_asset_long.new_feature("Ownership_motorized_vehicle_all",
@@ -419,7 +419,7 @@ mtf_hh_sec_hh_asset_long = mtf_hh_sec_hh_asset_long.select(
 
 # %% mtf_ng_hh_sec_n_elec_asset
 mtf_ng_hh_sec_n_elec_asset = ODEDataset("Nigeria/mtf_ng_hh_sec_n_elec_asset")
-mtf_ng_hh_sec_n_elec_asset.from_csv("../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_n_elec_asset.csv",
+mtf_ng_hh_sec_n_elec_asset.from_csv("../../playground/data/ESMAP/nigeria/mtf_ng_hh_sec_n_elec_asset.csv",
                                     encoding='latin1').group_by("HH_ID")
 
 mtf_ng_hh_sec_n_elec_asset = mtf_ng_hh_sec_n_elec_asset.new_feature("Presence_smartphone_charger",
@@ -507,6 +507,6 @@ Nigeria = Nigeria.merge(NG_MTF_HH_SEC_0, "HH_ID")
 Nigeria = Nigeria.merge(mtf_hh_sec_hh_asset_long, "HH_ID")
 Nigeria = Nigeria.merge(mtf_ng_hh_sec_n_elec_asset, "HH_ID")
 
-filname = "../playground/data/ESMAP/nigeria/Nigeria.csv"
+filname = "../../playground/data/ESMAP/nigeria/Nigeria.csv"
 Nigeria.to_csv(filname)
 print("Nigeria done. Exported to ", filname)

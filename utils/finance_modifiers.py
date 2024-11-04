@@ -121,3 +121,62 @@ def expenditure_zambia():
         return expenditure
 
     return inner
+
+
+# for section in ['hh_sec_c', 'hh_sec_d', 'hh_sec_f', 'hh_sec_i', 'hh_sec_j1', 'hh_sec_k', 'hh_sec_l', 'hh_sec_k']:
+
+def expenditure_multi_section(expenditure_yearly_cluster, expenditure_weekly_cluster, expenditure_monthly_cluster,
+                              expenditure_multi_period_cluster):
+    def inner(row: pd.Series):
+        total = 0
+
+        assert_many_columns_exists_in_row(row, expenditure_multi_period_cluster)
+        assert_many_columns_exists_in_row(row, expenditure_weekly_cluster)
+        assert_many_columns_exists_in_row(row, expenditure_monthly_cluster)
+        assert_many_columns_exists_in_row(row, expenditure_yearly_cluster)
+
+        for question in expenditure_yearly_cluster:
+            try:
+                for i in range(len(row[question])):
+                    if not is_nan(row[question][i]):
+                        temp = row[question][i] / 12
+                        total += temp
+            except:
+                total = total
+        for question in expenditure_monthly_cluster:
+            try:
+                for i in range(len(row[question])):
+                    if not is_nan(row[question][i]):
+                        temp = row[question][i]
+                        total += temp
+                    elif is_nan(row[question][i]):
+                        expenditure = np.nan
+                        return expenditure
+            except:
+                total = total
+        for question in expenditure_weekly_cluster:
+            try:
+                for i in range(len(row[question])):
+                    if not is_nan(row[question][i]):
+                        temp = row[question][i] * 4
+                        total += temp
+                    elif question == 'hh_f03' and row['hh_f02'][i] == 1:
+                        expenditure = np.nan
+                        return expenditure
+            except:
+                total = total
+
+        for question in expenditure_multi_period_cluster:
+            for i in range(len(row[question])):
+                if i in [0, 1, 2]:
+                    if not is_nan(row[question][i]):
+                        temp = row[question][i] * 4
+                        total += temp
+                else:
+                    if not is_nan(row[question][i]):
+                        temp = row[question][i]
+                        total += temp
+
+        return total
+
+    return inner
