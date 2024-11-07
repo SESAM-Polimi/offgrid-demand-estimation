@@ -215,3 +215,14 @@ def take_one_with_value(drivers: list, search_value: Any, not_found_value: Any =
         return not_found_value
 
     return inner
+
+
+def one_of_two(ref_question_1, ref_question_2):
+    def inner(row: pd.Series):
+        if is_nan(row[ref_question_1][0]):
+            result = row[ref_question_2]
+        else:
+            result = row[ref_question_1]
+        return result
+
+    return inner

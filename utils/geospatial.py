@@ -37,7 +37,7 @@ def get_gadm(
     def inner(row: pd.Series):
         assert_many_columns_exists_in_row(row, [ref_question_lev_1,
                                                 ref_question_lev_2,
-                                                ref_question_lev_2_1])
+                                                ])
 
         result = [np.nan, np.nan, np.nan, np.nan]
         if not is_nan(row[ref_question_lev_1][0]):

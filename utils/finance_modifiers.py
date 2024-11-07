@@ -180,3 +180,43 @@ def expenditure_multi_section(expenditure_yearly_cluster, expenditure_weekly_clu
         return total
 
     return inner
+
+
+def get_asset(ref_question, function_mode):
+    def inner(row: pd.Series):
+        result = 'No'
+        if function_mode == 'kenya':
+            if any(t == 1 for t in row[ref_question]['Answer']):
+                result = 'Yes'
+        if function_mode == 'nigeria':
+            for i in range(len(row['asset_list']['Answer'])):
+                if row['own_asset']['Answer'][i] == 1 and \
+                        row[ref_question]['Answer'][i] == 1:
+                    result = 'Yes'
+        if function_mode == 'zambia':
+            for i in range(len(row['mitem']['Answer'])):
+                if row['M1B']['Answer'][i] == 1 and \
+                        row[ref_question]['Answer'][i] == 1:
+                    result = 'Yes'
+        if function_mode == 'tanzania_vehicle':
+            if row['hh_m01']['Answer'][24] > 0 or \
+                    row['hh_m01']['Answer'][25] > 0:
+                result == 'Yes'
+        if function_mode == 'tanzania_livestock_small':
+            if row['lf02_01']['Answer'][6] == 1 or \
+                    row['lf02_01']['Answer'][7] == 1 or \
+                    row['lf02_01']['Answer'][8] == 1 or \
+                    row['lf02_01']['Answer'][12] == 1 or \
+                    row['lf02_01']['Answer'][13] == 1:
+                result = 'Yes'
+        if function_mode == 'tanzania_livestock_large':
+            if row['lf02_01']['Answer'][0] == 1 or \
+                    row['lf02_01']['Answer'][1] == 1 or \
+                    row['lf02_01']['Answer'][2] == 1 or \
+                    row['lf02_01']['Answer'][3] == 1 or \
+                    row['lf02_01']['Answer'][4] == 1 or \
+                    row['lf02_01']['Answer'][5] == 1:
+                result = 'Yes'
+        return result
+
+    return inner
