@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import math
+
+from .constants import NATIONAL_GRID, LOCAL_MINI_GRID
 from .helpers import *
 
 
@@ -178,5 +180,43 @@ def expenditure_multi_section(expenditure_yearly_cluster, expenditure_weekly_clu
                         total += temp
 
         return total
+
+    return inner
+
+
+def extract_electricity_expenditure_monthly(ref_question_1, ref_question_2):
+    def inner(row: pd.Series):
+        result = np.nan
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2, 'Connection_type'])
+        if row['Connection_type'] == NATIONAL_GRID:
+            result = float([ref_question_1][0])
+        elif row['Connection_type'] == LOCAL_MINI_GRID:
+            result = float([ref_question_2][0])
+        return result
+
+    return inner
+
+
+def extract_electricity_expenditure_not_monthly(ref_question_1, ref_question_2):
+    def inner(row: pd.Series):
+        result = np.nan
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2])
+        if type(row[ref_question_2][0]) == float or type(row[ref_question_2][0]) == int:
+            if row[ref_question_1][0] == 'D2':
+                result = row[ref_question_2][
+                             0] * 15
+            elif row[ref_question_1][0] == 'W':
+                result = row[ref_question_2][
+                             0] * 4
+            elif row[ref_question_1][0] == 'W2' or \
+                    row[ref_question_1][0] == 'M/2':
+                result = row[ref_question_2][
+                             0] * 2
+            elif row[ref_question_1][0] == 'M':
+                result = row[ref_question_2][0]
+            elif row[ref_question_1][0] == 'M3':
+                result = row[ref_question_2][
+                             0] / 3
+        return result
 
     return inner

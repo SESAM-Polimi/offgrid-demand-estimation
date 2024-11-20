@@ -129,18 +129,20 @@ def gis_info_by_gadm_level(variable,
     return inner
 
 
-def gis_info_by_village_level(variable, df):
+def gis_info_by_village_level(variable, village_gps_info_df: pd.DataFrame):
     def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, ['Township/Village'])
         result = np.nan
-        vars = Village_variables + ['GADM_level_1', 'GADM_level_2', 'GADM_level_3']
-        if variable in vars:
+        variables = Village_variables + ['GADM_level_1', 'GADM_level_2', 'GADM_level_3']
+        if variable in variables:
             if not is_nan(row['Township/Village']):
-                for i in list(df['Village_GPS_info'].keys()):
-                    temp = row['Township/Village']
-                    if temp == df['Village_GPS_info'][i]['Name'][0]:
-                        result = df['Village_GPS_info'][i][variable][0]
-                        return result
-
+                village = row['Township/Village']
+                gps_info = village_gps_info_df[village_gps_info_df['Name'] == village]
+                if not gps_info.empty:
+                    result = gps_info[variable].values[0]
+                    return result
+                else:
+                    return result
         return result
 
     return inner

@@ -35,9 +35,9 @@ def presence_appliances_long(ref_question_1, ref_appliance, ref_question_2):
     return inner
 
 
-def presence_appliances(ref_question_1, ref_appliance, ref_question_2):
+def presence_appliances(ref_question_1, ref_appliance):
     def inner(row: pd.Series):
-        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2])
+        assert_many_columns_exists_in_row(row, [ref_question_1])
 
         result = np.nan
         for i in range(len(row[ref_question_1])):

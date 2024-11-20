@@ -226,3 +226,31 @@ def one_of_two(ref_question_1, ref_question_2):
         return result
 
     return inner
+
+# These two functions replace the user_unification's function in the old code
+def try_get_one(questions: [], raise_error: bool = False, not_found_value: Any = np.nan):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, questions)
+        for question in questions:
+            try:
+                return row[question]
+            except:
+                continue
+
+        if raise_error:
+            raise ValueError('Value not found')
+        return not_found_value
+    return inner
+
+def find_one(questions: [], predicate: Callable[[Any], bool],
+             raise_error: bool = False, not_found_value: Any = np.nan):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, questions)
+        for question in questions:
+            if predicate(row[question]):
+                return row[question]
+        if raise_error:
+            raise ValueError('Value not found')
+        return not_found_value
+
+    return inner
