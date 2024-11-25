@@ -227,6 +227,7 @@ def one_of_two(ref_question_1, ref_question_2):
 
     return inner
 
+
 # These two functions replace the user_unification's function in the old code
 def try_get_one(questions: [], raise_error: bool = False, not_found_value: Any = np.nan):
     def inner(row: pd.Series):
@@ -240,7 +241,9 @@ def try_get_one(questions: [], raise_error: bool = False, not_found_value: Any =
         if raise_error:
             raise ValueError('Value not found')
         return not_found_value
+
     return inner
+
 
 def find_one(questions: [], predicate: Callable[[Any], bool],
              raise_error: bool = False, not_found_value: Any = np.nan):
@@ -252,5 +255,71 @@ def find_one(questions: [], predicate: Callable[[Any], bool],
         if raise_error:
             raise ValueError('Value not found')
         return not_found_value
+
+    return inner
+
+
+def select_multi_section_double_column_equal_to(ref_question_1, ref_answer, ref_question_2):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2])
+        result = np.nan
+        if type(row[ref_question_1]) == str or \
+                row[ref_question_1] == int or \
+                row[ref_question_1] == float:
+            if row[ref_question_1] == ref_answer:
+                result = [ref_question_2][0]
+        if type(row[ref_question_1]) == list:
+            for i in range(len(row[ref_question_1])):
+                if row[ref_question_1][i] == ref_answer:
+                    result = row[ref_question_2][i]
+        return result
+
+    return inner
+
+
+def select_multi_section_double_column_equal_to_else_zero(ref_question_1, ref_answer, ref_question_2):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question_1, ref_question_2])
+        result = np.nan
+        if type(row[ref_question_1]) == str or \
+                row[ref_question_1] == int or \
+                row[ref_question_1] == float:
+            if row[ref_question_1] == ref_answer:
+                result = row[ref_question_2][0]
+            else:
+                result = 0
+        if type(row[ref_question_1]) == list:
+            for i in range(len(row[ref_question_1])):
+                if row[ref_question_1][i] == ref_answer:
+                    result = row[ref_question_2][i]
+            if is_nan(result):
+                result = 0
+        return result
+
+    return inner
+
+
+def single_column_assignment(ref_question, ref_answer, function_mode,
+                             positive_output, negative_output):
+    def inner(row: pd.Series):
+        result = np.nan
+        assert_column_exists_in_row(row, ref_question)
+
+        temp = row[ref_question]
+        if type(temp) == list:
+            temp = temp[0]
+        if function_mode == 'higher_than' and temp > ref_answer:
+            result = positive_output
+        if function_mode == 'equal_to' and temp == ref_answer:
+            result = positive_output
+        if function_mode == 'equal_to_else':
+            if temp == ref_answer:
+                result = positive_output
+            else:
+                result = negative_output
+        if function_mode == 'not_empty':
+            if not is_nan(temp):
+                result = positive_output
+        return result
 
     return inner

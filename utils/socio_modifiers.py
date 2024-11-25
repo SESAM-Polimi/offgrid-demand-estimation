@@ -178,6 +178,18 @@ def extract_age_groups(ref_question, function_mode):
     return inner
 
 
+def extract_age_group_by_age_distribution(ref_question, age_distribution_norm: [float]):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question])
+        temp = row[ref_question]
+        return [x * temp for x in age_distribution_norm]
+
+    return inner
+
+
+
+
+
 def measurement_age(ref_question_1, ref_question_2, ref_question_solar_1, ref_question_solar_2):
     """
       Extracts the age of the connection based on the type of connection.
