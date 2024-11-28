@@ -137,6 +137,8 @@ def gis_info_by_village_level(variable, village_gps_info_df: pd.DataFrame):
         if variable in variables:
             if not is_nan(row['Township/Village']):
                 village = row['Township/Village']
+                if type(village) == list:
+                    village = village[0]
                 gps_info = village_gps_info_df[village_gps_info_df['Name'] == village]
                 if not gps_info.empty:
                     result = gps_info[variable].values[0]
