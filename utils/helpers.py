@@ -38,3 +38,13 @@ def filtering(value, wrong_answer_1, wrong_answer_2):
     if (value == wrong_answer_1) or (value == wrong_answer_2):
         result = np.nan
     return result
+
+
+def get_value_from_dict(key, dictionary):
+    if is_nan(key):
+        return np.nan
+
+    if key not in dictionary:
+        return np.nan
+
+    return dictionary[key]

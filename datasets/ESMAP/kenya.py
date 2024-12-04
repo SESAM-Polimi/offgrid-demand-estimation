@@ -240,7 +240,7 @@ MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Dwelling_toilet",
                                                                                            "b_b_13C",
                                                                                            Dwelling_Toilet_Quality_label2id))
 
-MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index)
+MTF_HH_Core_Survey = MTF_HH_Core_Survey.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index())
 
 connection_type_valid_answers = {constants.NATIONAL_GRID: 'Yes', constants.LOCAL_MINI_GRID: 'Yes',
                                  constants.SOLAR_HOME_SYSTEM: 1}

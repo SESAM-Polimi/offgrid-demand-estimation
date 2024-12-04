@@ -307,7 +307,7 @@ express_sections = express_sections.new_feature("Dwelling_water",
 express_sections = express_sections.new_feature("Dwelling_toilet",
                                                 common_modifiers.categorize("B13_1",
                                                                             Dwelling_Water_Quality_original2final))
-express_sections = express_sections.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index)
+express_sections = express_sections.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index())
 
 express_sections = express_sections.new_feature("Years_of_HHH_in_community",
                                                 socio_modifiers.get_years_of_hhh_in_community_multi_section("A4", "B4",

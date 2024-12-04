@@ -29,3 +29,77 @@ PRESENCE_LIST = [
     'Presence_phone_charger',
     'Presence_TV'
 ]
+
+# Dwelling quality
+
+Dwelling_Wall_Quality = {
+    'Blocks, plastered with cement': 1,
+    'Stone and cement': 1,
+    'Blocks, unplastered': 1,
+    'Steel': 1,
+    'Bricks': 1,
+    'Mud bricks (traditional)': 0,
+    'Wood and mud': 0,
+    'Corrugated iron sheet': 0,
+    'Chip wood': 0,
+    'Parquet or polished wood': 0,
+    'Wood only': 0,
+    'Stone only': 0,
+    'Wood and thatch': 0,
+    'Stone and mud': 0,
+    '0': 0,
+    'Reed/bamboo': 0,
+    'Asbestos': 0,
+    'Other': 0,
+    'Cargo container': 0
+}
+
+Dwelling_Roof_Quality = {
+    'Corrugated iron sheet': 0,
+    'Thatch': 0,
+    'Concrete/Cement': 1,
+    'Wood and mud': 0,
+    'Bricks': 1,
+    'Asbestos': 0,
+    'Bamboo/Reed': 0,
+    '0': 0,
+    'Plastic canvas': 0,
+    'Other': 0
+}
+
+Dwelling_Floor_Quality = {
+    'Mud/Dung': 0,
+    'Cement tiles': 1,
+    'Ceramic/Marble tiles': 1,
+    'Brick tiles': 1,
+    'Plastic tiles': 1,
+    'Wood planks': 1,
+    'Parquet or polished wood': 1,
+    'Cement screed': 1,
+    '0': 0,
+    'Other': 0,
+    'Bamboo/Reed': 0
+}
+
+Dwelling_Toilet_Quality = {
+    'Covered pit latrine': 1,
+    'Uncovered pit latrine': 0,
+    'Flush to sewage': 1,
+    'Flush to septic tank': 1,
+    'None': 1,
+    'Community latrine': 0,
+    'Pail / Bucket': 0,
+    'Other, specify': 0,
+    7.0: 0
+}
+
+Dwelling_Water_Quality = {
+    'Piped water': 1,
+    'Bore hole/ well': 1,
+    'River/spring': 0,
+    'Tanker/truck/vendor': 1,
+    'Rain water': 1,
+    'Lake/reservoir': 0,
+    'Bottle water': 1,
+    'Other': 0
+}

@@ -5,15 +5,18 @@ Education_level_HHH
 Number_adults
 Socio_status_HHH_Contributingfamilyworker / Socio_status_HHH
 Number_of_rooms
+Years_of_HHH_in_community
 
 Clean_fuel
 
-
+# Connection related
 Dwelling_quality_index
 Hours_available_electricity
 Measurement_age
+
+
 Monthly_expenditure
-Years_of_HHH_in_community
+
 
 Climate_zone_lev_1_3.0
 Climate_zone_lev_1_6.0
@@ -33,6 +36,3 @@ Tariff_payment_frequency_Every 6months
 Tariff_payment_frequency_Monthly
 Tariff_payment_frequency_Other
 Tariff_payment_frequency_Weekly
-
-
-

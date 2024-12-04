@@ -187,9 +187,6 @@ def extract_age_group_by_age_distribution(ref_question, age_distribution_norm: [
     return inner
 
 
-
-
-
 def measurement_age(ref_question_1, ref_question_2, ref_question_solar_1, ref_question_solar_2):
     """
       Extracts the age of the connection based on the type of connection.
@@ -343,3 +340,25 @@ def extract_relation_pos(ref_question_1, ref_question_2, answer):
         return result
 
     return inner
+
+
+def extract_household_position(relation_question, relation_answer):
+    """
+    Extracts the household position of the household head.
+    :param relation_question:  The reference question for the relation position.
+    :param relation_answer:  The answer for the relation that identifies the household head.
+    :return: modifier function to extract the household position of the household head.
+    """
+
+    def inner(row: pd.Series):
+        assert_column_exists_in_row(row, relation_question)
+        result = -1
+        for i in range(len(row[relation_question])):
+            if row[relation_question][i] == relation_answer:
+                result = i
+                break
+        return result
+    return inner
+
+
+

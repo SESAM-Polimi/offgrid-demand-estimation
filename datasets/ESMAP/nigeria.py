@@ -261,7 +261,7 @@ mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Dwelling_toilet",
                                                                                           "B13__8",
                                                                                           ))
 
-mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index)
+mtf_ng_hh_sec_b = mtf_ng_hh_sec_b.new_feature("Dwelling_quality_index", dwelling_modifiers.dwelling_quality_index())
 
 mtf_a1 = ODEDataset("Nigeria/mtf_ng_hh_sec_a1 helper")
 

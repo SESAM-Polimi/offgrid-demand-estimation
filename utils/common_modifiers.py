@@ -9,7 +9,7 @@ from .helpers import *
 def categorize(feature: str, categories: dict):
     def inner(row):
         value = row[feature]
-        if value is None or value is np.nan:
+        if is_nan(value):
             return np.nan
 
         keys = categories.keys()
@@ -321,5 +321,41 @@ def single_column_assignment(ref_question, ref_answer, function_mode,
             if not is_nan(temp):
                 result = positive_output
         return result
+
+    return inner
+
+
+def extract_feature_by_position(ref_question, position_question):
+    def inner(row: pd.Series):
+        assert_many_columns_exists_in_row(row, [ref_question, position_question])
+
+        temp = row[ref_question]
+        if type(temp) != list:
+            raise ValueError('The reference question is not a list')
+
+        position = row[position_question]
+        if position >= len(temp):
+            raise ValueError('The position is out of range')
+
+        if position == -1:
+            return np.nan
+
+        return temp[position]
+
+    return inner
+
+
+def is_in_list(ref_question, answers, positive_output, negative_output):
+    def inner(row: pd.Series):
+        assert_column_exists_in_row(row, ref_question)
+
+        answer = row[ref_question]
+        if type(answer) == list:
+            answer = answer[0]
+
+        if answer in answers:
+            return positive_output
+        else:
+            return negative_output
 
     return inner
