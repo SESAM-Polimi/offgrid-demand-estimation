@@ -220,3 +220,7 @@ def extract_electricity_expenditure_not_monthly(ref_question_1, ref_question_2):
         return result
 
     return inner
+
+
+
+
