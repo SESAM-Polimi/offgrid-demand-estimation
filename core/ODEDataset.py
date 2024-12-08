@@ -92,6 +92,12 @@ class ODEDataset:
         self._df = self._df.drop(columns=cols)
         return self
 
+    def value_counts(self, col: str):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        return self._df[col].value_counts()
+
     # Mergers
     #  Add another Dataset
 

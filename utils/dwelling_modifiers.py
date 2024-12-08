@@ -18,8 +18,16 @@ def get_dwelling_toilet(question_1, question_2, question_3,
             return dwelling_toilet_quality_label2id[value]
 
         toilet_1 = get_value(question_1)
+        if is_nan(toilet_1):
+            toilet_1 = 0
+
         toilet_2 = get_value(question_2)
+        if is_nan(toilet_2):
+            toilet_2 = 0
+
         toilet_3 = get_value(question_3)
+        if is_nan(toilet_3):
+            toilet_3 = 0
 
         return [toilet_1 | toilet_2 | toilet_3]
 
