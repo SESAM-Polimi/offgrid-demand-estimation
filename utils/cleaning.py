@@ -105,3 +105,22 @@ def categorize(ref_col):
         return df
 
     return inner
+
+
+def remove_row(ref_col, value):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        df = df[df[ref_col] != value]
+        return df
+    return inner
+
+
+
+def add_one_hot_encoding(ref_col):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        df = pd.concat([df, pd.get_dummies(df[ref_col], prefix=ref_col)], axis=1)
+        df = df.drop(ref_col, axis=1)
+        return df
+
+    return inner
