@@ -146,6 +146,14 @@ class ODEDataset:
         y: np.ndarray = self._df[y_columns].to_numpy(dtype=np.float32)
 
         return tf.data.Dataset.from_tensor_slices((x, y), name="ODEDataset")
+    def to_numpy(self,  x_columns: [str], y_columns: [str]):
+        if self._df is None:
+            raise ValueError("Dataset has not been initialized")
+
+        x: np.ndarray = self._df[x_columns].to_numpy(dtype=np.float32)
+        y: np.ndarray = self._df[y_columns].to_numpy(dtype=np.float32)
+
+        return x, y
 
     def to_csv(self, path: str, **kwargs):
         self._df.to_csv(path, **kwargs)
