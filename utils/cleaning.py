@@ -112,8 +112,8 @@ def remove_row(ref_col, value):
         df = src.copy()
         df = df[df[ref_col] != value]
         return df
-    return inner
 
+    return inner
 
 
 def add_one_hot_encoding(ref_col):
@@ -121,6 +121,15 @@ def add_one_hot_encoding(ref_col):
         df = src.copy()
         df = pd.concat([df, pd.get_dummies(df[ref_col], prefix=ref_col)], axis=1)
         df = df.drop(ref_col, axis=1)
+        return df
+
+    return inner
+
+
+def min_max_normalize(ref_col):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        df[ref_col] = (df[ref_col] - df[ref_col].min()) / (df[ref_col].max() - df[ref_col].min())
         return df
 
     return inner
