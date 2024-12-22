@@ -133,3 +133,32 @@ def min_max_normalize(ref_col):
         return df
 
     return inner
+
+
+def standardize(ref_col):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        series = df[ref_col]
+        # Step 1: Normalize to [0, 1]
+        min_val = series.min()
+        max_val = series.max()
+        normalized_series = (series - min_val) / (max_val - min_val)
+
+        # Step 2: Scale to [-0.5, 0.5]
+        scaled_series = normalized_series - 0.5
+        df[ref_col] = scaled_series
+        return df
+
+    return inner
+
+
+def merge_categories(ref_col, category_map):
+    def inner(row: pd.Series):
+        assert_column_exists_in_row(row, ref_col)
+
+        value = row[ref_col]
+
+        mapped_value = category_map[value]
+        return mapped_value
+
+    return inner
