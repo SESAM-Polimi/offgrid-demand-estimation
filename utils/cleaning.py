@@ -78,6 +78,21 @@ def fillna(ref_col, new_value):
 
     return inner
 
+def fillna_with_mean(ref_col):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        df[ref_col] = df[ref_col].fillna(df[ref_col].mean())
+        return df
+
+    return inner
+
+def interpolate(ref_col):
+    def inner(src: pd.DataFrame):
+        df = src.copy()
+        df[ref_col] = df[ref_col].interpolate()
+        return df
+    return inner
+
 
 def astype(ref_col, new_type):
     def inner(src: pd.DataFrame):
