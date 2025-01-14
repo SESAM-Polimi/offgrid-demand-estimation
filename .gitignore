@@ -2,3 +2,4 @@ playground
 *.xml
 */__pycache__/*
 __pycache__/
+assets

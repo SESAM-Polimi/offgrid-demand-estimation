@@ -1,196 +1,82 @@
+## Different Number of Blocks
 
-### EXP 1
-EPOCHS = 500
-BATCH_SIZE = 64
-Features = all (61)
-sampler: Random Under Sampler
-Threshold=0.5
-EARLY_STOPPING = Without
+### Config A
 
+-   Each with 64 Units
+-   Dropout 0.4
+-   Regularization 0.01
+-   Starting Learning Rate 0.001
+-   Batch Size 128
+-   Patience 100
 
-Validation
-              precision    recall  f1-score   
+**Results:**
 
-         0.0       0.89      0.98      0.93  
-         1.0       0.92      0.61      0.73  
+| # Blocks | # Epochs | AUC           | Precision   | Recall       | F1 Score    |
+| -------- | -------- | ------------- | ----------- | ------------ | ----------- |
+| 2        | 168      | 0.949 - 0.935 | 0.83 - 0.81 | 0.98 - 0.96  | 0.90 - 0.88 |
+| 4        | 285      | 0.945 - 0.93  | 0.83 - 0.81 | 0.98 - 0.96  | 0.90 - 0.88 |
+| 8        | 394      | 0.94 - 0.92   | 0.83 - 0.81 | 0.98 - 0.97  | 0.90 - 0.89 |
+| 16       | 266      | 0.921 - 0.919 | 0.82 - 0.82 | 0.947 - 0.95 | 0.88 - 0.88 |
 
-    accuracy                           0.89  
+### Config B
 
-```python
-model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(FEATURE_NUM,)),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-```
+-   Each with 128 Units
+-   Dropout 0.3
+-   Regularization 0.01
+-   Starting Learning Rate 0.001
+-   Batch Size 256
+-   Patience 100
 
+**Results:**
 
+| # Blocks | # Epochs | AUC          | Precision   | Recall      | F1 Score    |
+| -------- | -------- | ------------ | ----------- | ----------- | ----------- |
+| 2        | 261      | 0.95 - 0.934 | 0.84 - 0.83 | 0.98 - 0.95 | 0.90 - 0.88 |
+| 4        | 164      | 0.95 - 0.94  | 0.83 - 0.81 | 0.98 - 0.97 | 0.90 - 0.88 |
+| 8        | 161      | 0.94 - 0.93  | 0.83 - 0.81 | 0.98 - 0.97 | 0.90 - 0.88 |
+| 16       | 215      | 0.93 - 0.92  | 0.81 - 0.80 | 0.96 - 0.96 | 0.88 - 0.87 |
 
-### EXP 2
-EPOCHS = 1000
-BATCH_SIZE = 512
-OPTIMIZER = tf.keras.optimizers.Adam(learning_rate=0.001)
-Features = all (61)
-sampler: Random Over Sampler
-Threshold=0.5
-EARLY_STOPPING = NO
+> Summary: The best results were obtained with 8 blocks, Config B, is the best configuration for this dataset.
 
-Validation
-              precision    recall  f1-score   
+We can also shift the classification threshold to improve the result further
 
-         0.0       0.98      0.70      0.81   
-         1.0       0.51      0.96      0.66   
+# Final Results
 
-    accuracy                           0.76   
-   
+The model with Config B and 8 Blocks was selected as the best model. The final results are:
 
-```python
-model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(FEATURE_NUM,)),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.2),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-```
+## Training
 
+| Appliance              | AUC  | Precision | Recall | F1 Score | F2 Score | Accuracy |
+| ---------------------- | ---- | --------- | ------ | -------- | -------- | -------- |
+| Iron                   | 0.95 | 0.83      | 0.99   | 0.90     | 0.95     | 0.89     |
+| TV                     | 0.97 | 0.90      | 0.96   | 0930     | 0.95     | 0.93     |
+| DVD Player             | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Fan                    | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Refrigerator / Freezer | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Radio / Stereo         | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Phone Charger          | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
 
-## EXP 3
+## Validation
 
-Training
-              precision    recall  f1-score   
+| Appliance              | AUC   | Precision | Recall | F1 Score | F2 Score | Accuracy |
+| ---------------------- | ----- | --------- | ------ | -------- | -------- | -------- |
+| Iron                   | 0.93  | 0.81      | 0.96   | 0.88     | 0.93     | 0.87     |
+| TV                     | 0.096 | 0.88      | 0.92   | 0.90     | 0.91     | 0.90     |
+| DVD Player             | 0.0   | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Fan                    | 0.0   | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Refrigerator / Freezer | 0.0   | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Radio / Stereo         | 0.0   | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Phone Charger          | 0.0   | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
 
-         0.0       0.94      0.86      0.90   
-         1.0       0.87      0.95      0.91   
+## Testing
 
-    accuracy                           0.91   
-****************************************************************************************************
-Validation
-              precision    recall  f1-score  
-
-         0.0       0.98      0.84      0.90  
-         1.0       0.66      0.94      0.77  
-
-    accuracy                           0.87  
-
-
-### Params
-```python
-BATCH_SIZE = 1024
-EPOCHS = 1000
-OPTIMIZER = tf.keras.optimizers.Adam(learning_rate=0.001)
-LOSS = tf.keras.losses.BinaryCrossentropy()
-PATIENCE = 100
-EARLY_STOPPING = tf.keras.callbacks.EarlyStopping(
-    monitor='val_f2_score',    
-    patience=PATIENCE,         
-    restore_best_weights=True, 
-    mode='max'
-)
-
-CALLBACKS = [
-    EARLY_STOPPING,
-]
-Features = all
-THRESHOLD = 0.5
-
-```
-### Model 
-```python
-model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(FEATURE_NUM,)),
-    tf.keras.layers.Dense(128),
-    tf.keras.layers.BatchNormalization(),  
-    tf.keras.layers.ReLU(),
-    tf.keras.layers.Dense(128),
-    tf.keras.layers.BatchNormalization(),  
-    tf.keras.layers.ReLU(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-```
-
-
-
-
-
-
-## EXP 4
-### PARAMS
-```python
-
-BATCH_SIZE = 1024
-EPOCHS = 1000 # Stopped at 882
-OPTIMIZER = tf.keras.optimizers.Adam(learning_rate=0.001)
-LOSS = tf.keras.losses.BinaryCrossentropy()
-PATIENCE = 250
-EARLY_STOPPING = tf.keras.callbacks.EarlyStopping(
-    monitor='val_precision',    # Metric to monitor (e.g., validation loss)
-    patience=PATIENCE,            # Number of epochs to wait for improvement
-    restore_best_weights=True,  # Restore weights from the best epoch
-    mode='max',
-    start_from_epoch=250
-)
-
-reduce_lr = tf.keras.callbacks.ReduceLROnPlateau(
-    monitor='val_f2_score',  # Metric to monitor
-    factor=0.9,          # Reduce learning rate by this factor (50%)
-    patience=PATIENCE,          # Wait for 3 epochs of no improvement
-    min_lr=1e-6,          # Minimum learning rate
-    mode='max'
-)
-
-CALLBACKS = [
-    EARLY_STOPPING, 
-    # reduce_lr
-]
-
-```
-Features = all
-THRESHOLD = 0.4
-
-### Model 
-
-```python
-initializer = tf.keras.initializers.GlorotNormal(21)  
-regularizer = None
-
-model = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(FEATURE_NUM,)),
-    tf.keras.layers.Dense(128, kernel_initializer=initializer, kernel_regularizer=regularizer),
-    tf.keras.layers.BatchNormalization(),  
-    tf.keras.layers.ReLU(),
-    tf.keras.layers.Dense(128,kernel_initializer=initializer, kernel_regularizer=regularizer),
-    tf.keras.layers.BatchNormalization(),  
-    tf.keras.layers.ReLU(),
-    tf.keras.layers.Dense(128,kernel_initializer=initializer,
-                           kernel_regularizer=regularizer,
-                           activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
-```
-
-### Results
-Training
-              precision    recall  f1-score   
-
-         0.0       0.82      0.93      0.87   
-         1.0       0.92      0.80      0.86   
-
-    accuracy                           0.87   
-   
-
-****************************************************************************************************
-Validation
-              precision    recall  f1-score   
-
-         0.0       0.93      0.91      0.92   
-         1.0       0.75      0.79      0.77   
-
-    accuracy                           0.88   
-   
+| Appliance              | AUC  | Precision | Recall | F1 Score | F2 Score | Accuracy |
+| ---------------------- | ---- | --------- | ------ | -------- | -------- | -------- |
+| Iron                   | 0.93 | 0.78      | 0.88   | 0.83     | 0.86     | 0.83     |
+| TV                     | 0.97 | 0.81      | 0.90   | 0.85     | 0.88     | 0.90     |
+| DVD Player             | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Fan                    | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Refrigerator / Freezer | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Radio / Stereo         | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
+| Phone Charger          | 0.0  | 0.0       | 0.0    | 0.0      | 0.0      | 0.0      |
 
