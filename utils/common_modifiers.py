@@ -79,9 +79,14 @@ def combine_drivers(result: str, func: Callable[[pd.Series], Any]) -> callable:
 
 def multi_unify_presence(drivers: [str]) -> Callable:
     def inner_unify_presence(row: pd.Series) -> int:
+        all_nan = True
         for driver in drivers:
             if row[driver] == 1:
                 return 1
+            if not is_nan(row[driver]):
+                all_nan = False
+        if all_nan:
+            return np.nan
         return 0
 
     return inner_unify_presence
@@ -93,6 +98,10 @@ def unify_presence(driver1: str, driver2: str) -> Callable:
         y = row[driver2]
         if x == 1 or y == 1:
             return 1
+        
+        if is_nan(x) and is_nan(y):
+            return np.nan
+        
         else:
             return 0
 
